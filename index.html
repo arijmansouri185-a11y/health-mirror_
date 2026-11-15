@@ -3,569 +3,627 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Health Mirror</title>
+<meta name="theme-color" content="#effaf7">
+<meta name="description" content="Health Mirror — AI-powered health information awareness and misinformation education.">
+<title>Health Mirror | Think Before You Trust</title>
+
 <style>
-* {
-  box-sizing: border-box;
+:root {
+  --mint: #eaf8f3;
+  --white: #ffffff;
+  --teal: #159b91;
+  --dark: #183c43;
+  --purple: #8063cf;
+  --coral: #ff8d83;
+  --muted: #71858a;
+  --border: #e3eeeb;
+  --shadow: 0 12px 35px rgba(32, 94, 91, .09);
 }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
-  color: #183c4a;
-  background: linear-gradient(135deg,#effbf8,#eef5ff);
+  background: #f7fbfa;
+  color: var(--dark);
+  line-height: 1.6;
 }
-a {
-  text-decoration: none;
-  color: inherit;
+a { text-decoration: none; color: inherit; }
+button { font: inherit; cursor: pointer; }
+header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255,255,255,.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
 }
-button {
-  cursor: pointer;
-  font: inherit;
-}
-.navbar {
-  width: 94%;
-  margin: 18px auto;
-  padding: 13px 20px;
-  background: white;
-  border-radius: 20px;
+.nav {
+  max-width: 1200px;
+  margin: auto;
+  padding: 12px 5%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 15px;
-  box-shadow: 0 8px 30px #315c6810;
 }
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: bold;
-  font-size: 20px;
-}
-.brand img {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-}
-.brand small {
-  display: block;
-  color: #159f9b;
-  font-size: 9px;
-  letter-spacing: 1px;
-}
-.navlinks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  align-items: center;
-  font-size: 13px;
-  color: #526c77;
-}
-.menu-btn {
-  display: none;
-  border: 0;
-  background: #eaf9f5;
-  padding: 9px 13px;
-  border-radius: 10px;
-}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; }
+.brand img { width: 44px; height: 44px; object-fit: contain; }
+nav { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; }
+nav a { font-size: 13px; font-weight: 700; color: #547077; }
+nav a:hover { color: var(--teal); }
+.menu-btn { display: none; border: 0; background: var(--mint); padding: 8px 12px; border-radius: 10px; }
+.container { width: min(1100px, 90%); margin: auto; }
 .hero {
-  max-width: 1120px;
-  margin: 65px auto 55px;
-  padding: 25px;
-  display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  align-items: center;
-  gap: 35px;
+  padding: 85px 0 75px;
+  background:
+    radial-gradient(circle at 85% 20%, #e9e1ff 0, transparent 28%),
+    radial-gradient(circle at 10% 90%, #d8f5eb 0, transparent 30%),
+    linear-gradient(135deg, #f4fcf9, #fff);
 }
-.eyebrow {
-  color: #159f9b;
-  font-weight: bold;
-  letter-spacing: 2px;
-  font-size: 12px;
-}
-.hero h1 {
-  font-size: clamp(42px,6vw,68px);
-  margin: 15px 0;
-}
-.gradient-text {
-  background: linear-gradient(90deg,#159f9b,#4c91d9,#8871d9);
+.hero-grid { display: grid; grid-template-columns: 1.3fr .7fr; align-items: center; gap: 35px; }
+.eyebrow { color: var(--teal); font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+h1 { font-size: clamp(38px, 6vw, 65px); line-height: 1.08; margin: 15px 0; }
+.gradient {
+  background: linear-gradient(90deg, var(--teal), var(--purple));
   -webkit-background-clip: text;
   color: transparent;
 }
-.hero p {
-  color: #66818a;
-  line-height: 1.8;
-  max-width: 540px;
-}
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 25px;
-}
+.hero p { color: var(--muted); max-width: 600px; font-size: 17px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 25px; }
 .btn {
   display: inline-block;
-  padding: 13px 21px;
-  border-radius: 13px;
   border: 0;
-  font-weight: bold;
+  border-radius: 13px;
+  padding: 12px 19px;
+  font-weight: 800;
+  transition: .2s;
 }
-.primary {
-  color: white;
-  background: linear-gradient(100deg,#159f9b,#4c91d9);
-}
-.secondary {
-  background: white;
-  color: #159f9b;
-  border: 1px solid #ccebe5;
-}
-.hero-art {
-  min-height: 330px;
+.btn:hover { transform: translateY(-2px); }
+.primary { background: linear-gradient(100deg, var(--teal), var(--purple)); color: white; }
+.secondary { background: white; border: 1px solid var(--border); color: var(--dark); }
+.mirror-art {
+  min-height: 280px;
   border-radius: 35px;
-  background: linear-gradient(145deg,#d9f7ed,#e3eaff);
+  background: linear-gradient(145deg, #d9f5ed, #eee7ff);
   display: grid;
   place-items: center;
-  position: relative;
+  box-shadow: var(--shadow);
+  font-size: 90px;
 }
-.mirror {
-  width: 190px;
-  height: 235px;
-  border: 9px solid white;
-  border-radius: 100px 100px 45px 45px;
-  background: linear-gradient(145deg,#a9e9dc,#9db9f0);
-  display: grid;
-  place-items: center;
-  font-size: 75px;
-}
-.art-label {
-  position: absolute;
-  bottom: 22px;
-  background: white;
-  color: #159f9b;
-  padding: 10px 16px;
-  border-radius: 30px;
-  font-size: 12px;
-  font-weight: bold;
-}
-.sources {
-  text-align: center;
-  color: #66818a;
-  font-size: 13px;
-  margin: 15px;
-}
-.sources strong {
-  color: #159f9b;
-  margin: 0 9px;
-}
-.section {
-  max-width: 1120px;
-  margin: 65px auto;
-  padding: 20px;
-}
-.section-title {
-  text-align: center;
-  margin-bottom: 30px;
-}
-.section-title h2 {
-  font-size: 32px;
-}
-.section-title p {
-  color: #66818a;
-}
-.cards {
-  display: grid;
-  grid-template-columns: repeat(4,1fr);
-  gap: 17px;
-}
+section { padding: 65px 0; }
+.section-head { text-align: center; margin-bottom: 30px; }
+.section-head h2 { font-size: clamp(26px, 4vw, 36px); margin-bottom: 8px; }
+.section-head p { color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .card {
   background: white;
-  border: 1px solid #e4f1ef;
+  border: 1px solid var(--border);
   border-radius: 20px;
   padding: 23px;
+  box-shadow: var(--shadow);
 }
-.card .symbol {
-  font-size: 30px;
-}
-.card h3 {
-  font-size: 17px;
-}
-.card p {
-  color: #66818a;
-  line-height: 1.6;
-  font-size: 14px;
-}
-.panel-grid {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 18px;
-}
+.card h3 { margin: 9px 0; }
+.card p { color: var(--muted); font-size: 14px; }
+.card-icon { font-size: 27px; }
+.soft { background: var(--mint); }
 .panel {
   background: white;
+  border: 1px solid var(--border);
+  border-radius: 24px;
   padding: 25px;
-  border-radius: 22px;
-  border: 1px solid #e0efed;
+  box-shadow: var(--shadow);
+  max-width: 850px;
+  margin: auto;
 }
-.panel h3 {
-  color: #159f9b;
+label { display: block; font-weight: 800; margin: 14px 0 7px; }
+textarea, input {
+  width: 100%;
+  border: 1px solid #dce9e5;
+  border-radius: 13px;
+  padding: 14px;
+  font: inherit;
+  outline: none;
+  background: #fbfefd;
 }
-.panel p {
-  color: #66818a;
-  line-height: 1.7;
+textarea { min-height: 125px; resize: vertical; }
+textarea:focus, input:focus { border-color: var(--teal); }
+.result {
+  display: none;
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #eff9f6;
+  border: 1px solid #d5eee6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
-footer {
-  text-align: center;
-  padding: 30px;
-  color: #66818a;
-  font-size: 13px;
-}
+.result.error { background: #fff1ef; border-color: #ffd4ce; }
+.status { color: var(--muted); font-size: 13px; margin-top: 10px; }
+.feature-link { color: var(--teal); font-weight: 800; display: inline-block; margin-top: 12px; }
+ul.clean { padding-left: 20px; color: var(--muted); }
+footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a7d; font-size: 13px; }
 @media(max-width:800px) {
-  .hero {
-    grid-template-columns: 1fr;
-    margin-top: 30px;
-  }
-  .cards {
-    grid-template-columns: repeat(2,1fr);
-  }
-  .panel-grid {
-    grid-template-columns: 1fr;
-  }
-  .navlinks {
-    display: none;
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .navlinks.open {
-    display: flex;
-  }
-  .navbar {
-    flex-wrap: wrap;
-  }
-  .menu-btn {
-    display: block;
-  }
+  .hero-grid { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr 1fr; }
+  nav { display: none; position: absolute; top: 68px; left: 0; right: 0; background: white; padding: 20px; box-shadow: var(--shadow); }
+  nav.open { display: flex; flex-direction: column; align-items: flex-start; }
+  .menu-btn { display: block; }
 }
-@media(max-width:430px) {
-  .cards {
-    grid-template-columns: 1fr;
-  }
+@media(max-width:520px) {
+  .grid { grid-template-columns: 1fr; }
+  .hero { padding: 55px 0; }
+  section { padding: 48px 0; }
 }
 </style>
 </head>
-<body>
 
-<header class="navbar">
-  <a class="brand" href="#home">
-    <img src="logo.png" alt="Health Mirror logo">
-    <span>
-      Health Mirror
-      <small>FACTS REFLECT BETTER HEALTH</small>
-    </span>
-  </a>
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
-  <nav class="navlinks" id="navlinks">
-    <a href="#home">Home</a>
-    <a href="#check">Check a Claim</a>
-    <a href="#evidence">Evidence</a>
-    <a href="#history">History</a>
-    <a href="#alerts">Alerts</a>
-    <a href="#community">Community</a>
-    <a href="#shield">Share Shield</a>
-    <a href="#profile">Profile</a>
-    <a href="quiz.html">Quiz</a>
-  </nav>
+<body>
+<header>
+  <div class="nav">
+    <a class="brand" href="#home">
+      <img src="logo.png" alt="Health Mirror logo">
+      <span>Health Mirror</span>
+    </a>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <nav id="mainNav">
+      <a href="#home">Home</a>
+      <a href="#analyzer">AI Analyzer</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#community">Community</a>
+      <a href="#shield">Share Shield</a>
+      <a href="#guide">AI Guide</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#history">History</a>
+      <a href="#profile">Profile</a>
+    </nav>
+  </div>
 </header>
 
 <main>
 <section class="hero" id="home">
-  <div>
-    <div class="eyebrow">YOUR HEALTH. YOUR KNOWLEDGE. YOUR CHOICE.</div>
-    <h1>Health <span class="gradient-text">Mirror</span></h1>
-    <p>
-      Reflect before you believe. Explore health claims,
-      learn from trusted medical sources, and make safer
-      health decisions.
-    </p>
-    <div class="actions">
-      <a class="btn primary" href="#check">Check a Claim</a>
-      <a class="btn secondary" href="#features">Learn More</a>
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">AI • Health • Trust</div>
+      <h1>Think Before<br><span class="gradient">You Trust.</span></h1>
+      <p>
+        Meet Health Mirror — an AI-powered educational platform
+        helping people understand health claims, recognize
+        misinformation, and share information responsibly.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="#analyzer">Analyze a Claim</a>
+        <a class="btn secondary" href="#quiz">Explore the Quiz</a>
+      </div>
+    </div>
+    <div class="mirror-art" aria-label="Health Mirror illustration">🪞🛡️</div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <h2>One Platform. Smarter Health Decisions.</h2>
+      <p>Explore the tools that help you think critically about health information.</p>
+    </div>
+    <div class="grid">
+      <article class="card"><div class="card-icon">🔎</div><h3>AI Analysis</h3><p>Review health claims with an AI-powered educational assistant.</p></article>
+      <article class="card"><div class="card-icon">📚</div><h3>Trusted Evidence</h3><p>Explore reliable health information from recognized institutions.</p></article>
+      <article class="card"><div class="card-icon">🛡️</div><h3>Safer Sharing</h3><p>Identify potential sharing risks before forwarding health messages.</p></article>
     </div>
   </div>
-  <div class="hero-art">
-    <div class="mirror">🛡️</div>
-    <div class="art-label">Reflect • Verify • Protect</div>
-  </div>
 </section>
 
-<div class="sources">
-  Supported by trusted knowledge:
-  <strong>WHO</strong>
-  <strong>PubMed</strong>
-  <strong>NIH</strong>
-</div>
-
-<section class="section" id="features">
-  <div class="section-title">
-    <h2>Why Health Mirror?</h2>
-    <p>Tools that help you think critically about health information.</p>
-  </div>
-  <div class="cards">
-    <article class="card">
-      <div class="symbol">🔎</div>
-      <h3>Detect Misinformation</h3>
-      <p>Examine health claims and identify warning signs.</p>
-    </article>
-    <article class="card">
-      <div class="symbol">📚</div>
-      <h3>Trusted Sources</h3>
-      <p>Explore reliable medical and scientific resources.</p>
-    </article>
-    <article class="card">
-      <div class="symbol">🛡️</div>
-      <h3>Make Safer Choices</h3>
-      <p>Think carefully before sharing health advice.</p>
-    </article>
-    <article class="card">
-      <div class="symbol">⚡</div>
-      <h3>Fast & Easy</h3>
-      <p>Access useful health information in a simple way.</p>
-    </article>
-  </div>
-</section>
-<section class="section" id="check">
-  <div class="section-title">
-    <h2>Check a Health Claim</h2>
-    <p>Pause, reflect, and examine health information.</p>
-  </div>
-
-  <div class="panel">
-    <label for="claimInput"><strong>Enter a health claim:</strong></label>
-    <textarea id="claimInput" rows="5"
-      style="width:100%;padding:15px;margin-top:12px;border:1px solid #cce5e2;border-radius:12px;"
-      placeholder="Write or paste a health claim here..."></textarea>
-    <button class="btn primary" onclick="analyzeClaim()" style="margin-top:12px;">
-      Analyze Claim
-    </button>
-    <div id="claimResult" style="margin-top:20px;"></div>
-    <p style="font-size:12px;color:#66818a;">
-      This prototype does not provide medical diagnosis or verified AI analysis.
-    </p>
-  </div>
-</section>
-
-<section class="section" id="evidence">
-  <div class="section-title">
-    <h2>Trusted Evidence</h2>
-    <p>Explore reliable health and scientific resources.</p>
-  </div>
-  <div class="panel-grid">
-    <div class="panel">
-      <h3>World Health Organization</h3>
-      <p>International health information and guidance.</p>
-      <a class="btn secondary" href="https://www.who.int/" target="_blank">Visit WHO</a>
+<section class="soft" id="analyzer">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Health Mirror AI</div>
+      <h2>AI Health Claim Analyzer</h2>
+      <p>Submit a health claim and receive an educational evidence review.</p>
     </div>
     <div class="panel">
-      <h3>PubMed</h3>
-      <p>Search biomedical research and scientific publications.</p>
-      <a class="btn secondary" href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank">Visit PubMed</a>
+      <label for="claimInput">Enter a health claim</label>
+      <textarea id="claimInput" maxlength="3000" placeholder="Example: Drinking a certain tea can cure every infection..."></textarea>
+      <div class="actions">
+        <button class="btn primary" onclick="runAI('analyze')">Analyze Claim</button>
+      </div>
+      <div id="claimResult" class="result" aria-live="polite"></div>
+      <p class="status">AI-generated educational information is not a medical diagnosis or a substitute for professional advice.</p>
+    </div>
+  </div>
+</section>
+
+<section id="evidence">
+  <div class="container">
+    <div class="section-head">
+      <h2>Explore Trusted Evidence</h2>
+      <p>Check important health information using reliable sources.</p>
+    </div>
+    <div class="grid">
+      <article class="card"><div class="card-icon">🌍</div><h3>World Health Organization</h3><p>Global public health guidance and health information.</p><a class="feature-link" href="https://www.who.int/" target="_blank" rel="noopener">Visit WHO ↗</a></article>
+      <article class="card"><div class="card-icon">🧬</div><h3>PubMed</h3><p>Search biomedical and life sciences research.</p><a class="feature-link" href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" rel="noopener">Visit PubMed ↗</a></article>
+      <article class="card"><div class="card-icon">🏥</div><h3>NIH</h3><p>Explore research and health information.</p><a class="feature-link" href="https://www.nih.gov/" target="_blank" rel="noopener">Visit NIH ↗</a></article>
+    </div>
+  </div>
+</section>
+
+<section class="soft" id="community">
+  <div class="container">
+    <div class="section-head">
+      <h2>Community Health Review</h2>
+      <p>Use AI to review a health message before discussing or sharing it.</p>
     </div>
     <div class="panel">
-      <h3>National Institutes of Health</h3>
-      <p>Explore health information and medical research.</p>
-      <a class="btn secondary" href="https://www.nih.gov/" target="_blank">Visit NIH</a>
+      <label for="communityInput">Health message</label>
+      <textarea id="communityInput" maxlength="3000" placeholder="Paste a health message for an educational review..."></textarea>
+      <button class="btn primary" onclick="runAI('community')">Review with AI</button>
+      <div id="communityResult" class="result" aria-live="polite"></div>
+      <p class="status">This tool reviews the submitted message. It does not publish it or verify a person's identity.</p>
     </div>
   </div>
 </section>
 
-<section class="section" id="history">
-  <div class="section-title">
-    <h2>Analysis History</h2>
-    <p>Your recent activity on this device.</p>
-  </div>
-  <div class="panel">
-    <div id="historyList">No claims checked yet.</div>
-    <button class="btn secondary" onclick="clearHistory()">Clear History</button>
-  </div>
-</section>
-
-<section class="section" id="alerts">
-  <div class="section-title">
-    <h2>Health Alerts</h2>
-    <p>Learn how to stay informed about health news.</p>
-  </div>
-  <div class="panel">
-    <h3>Stay Informed</h3>
-    <p>Follow official health organizations and check the date and source of health announcements.</p>
-    <a class="btn primary" href="https://www.who.int/news" target="_blank">WHO News</a>
-    <p style="font-size:12px;">Live alerts are not connected in this prototype.</p>
+<section id="shield">
+  <div class="container">
+    <div class="section-head">
+      <h2>Share Shield</h2>
+      <p>Pause, review, and make a more responsible sharing decision.</p>
+    </div>
+    <div class="panel">
+      <label for="shieldInput">What are you about to share?</label>
+      <textarea id="shieldInput" maxlength="3000" placeholder="Paste the health post or message here..."></textarea>
+      <button class="btn primary" onclick="runAI('shield')">Check Sharing Risk</button>
+      <div id="shieldResult" class="result" aria-live="polite"></div>
+      <p class="status">A risk review is not proof that a message is true or false.</p>
+    </div>
   </div>
 </section>
 
-<section class="section" id="community">
-  <div class="section-title">
-    <h2>Community</h2>
-    <p>Share ideas and encourage responsible health discussions.</p>
-  </div>
-  <div class="panel">
-    <textarea id="communityInput" rows="3"
-      style="width:100%;padding:14px;border:1px solid #cce5e2;border-radius:12px;"
-      placeholder="Share a health awareness message..."></textarea>
-    <button class="btn primary" onclick="addPost()" style="margin-top:12px;">Share Message</button>
-    <div id="communityPosts" style="margin-top:20px;"></div>
-    <p style="font-size:12px;">Messages are saved locally on this device, not shared with other users.</p>
-  </div>
-</section>
-
-<section class="section" id="shield">
-  <div class="section-title">
-    <h2>Share Shield</h2>
-    <p>Think before you share health information.</p>
-  </div>
-  <div class="panel">
-    <h3>Before Sharing, Ask Yourself:</h3>
-    <p>✓ Is the original source trustworthy?</p>
-    <p>✓ Is there scientific evidence?</p>
-    <p>✓ Is the information recent?</p>
-    <p>✓ Could sharing this claim cause harm?</p>
-    <p><strong>Stop. Check. Protect.</strong></p>
+<section class="soft" id="guide">
+  <div class="container">
+    <div class="section-head">
+      <h2>AI Health Guide</h2>
+      <p>Ask an educational question about health information.</p>
+    </div>
+    <div class="panel">
+      <label for="guideInput">Your question</label>
+      <textarea id="guideInput" maxlength="3000" placeholder="Example: How can I recognize an unreliable health source?"></textarea>
+      <button class="btn primary" onclick="runGuide()">Ask Health Mirror AI</button>
+      <div id="guideResult" class="result" aria-live="polite"></div>
+      <p class="status">For general education only. For personal health concerns, consult a qualified healthcare professional.</p>
+    </div>
   </div>
 </section>
 
-<section class="section" id="profile">
-  <div class="section-title">
-    <h2>Your Profile</h2>
-    <p>Personalize your Health Mirror experience.</p>
-  </div>
-  <div class="panel">
-    <label for="userName">Your display name:</label>
-    <input id="userName" type="text" placeholder="Enter your name"
-      style="width:100%;padding:13px;margin:12px 0;border:1px solid #cce5e2;border-radius:12px;">
-    <button class="btn primary" onclick="saveProfile()">Save Profile</button>
-    <p id="profileMessage"></p>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-title">
-    <h2>Level Up Your Knowledge!</h2>
-    <p>Test what you have learned about health misinformation.</p>
-  </div>
-  <div class="panel" style="text-align:center;">
-    <h3>Health Mirror Quiz</h3>
-    <p>Challenge yourself, learn, and earn medals.</p>
-    <a class="btn primary" href="quiz.html">Play the Quiz</a>
+<section id="quiz">
+  <div class="container">
+    <div class="section-head">
+      <h2>Test Your Health Misinformation Knowledge</h2>
+      <p>Challenge yourself with the Health Mirror quiz.</p>
+    </div>
+    <div class="panel" style="text-align:center">
+      <div class="card-icon">🧠</div>
+      <h3>Ready to test what you know?</h3>
+      <p>Your existing quiz and its questions are preserved in a separate file.</p>
+      <div class="actions" style="justify-content:center">
+        <a class="btn primary" href="quiz.html">Start the Quiz</a>
+      </div>
+    </div>
   </div>
 </section>
 
+<section class="soft" id="history">
+  <div class="container">
+    <div class="section-head">
+      <h2>Analysis History</h2>
+      <p>Review the AI analysis results saved on this device.</p>
+    </div>
+    <div class="panel">
+      <div id="historyList">No analyses saved yet.</div>
+      <button class="btn secondary" onclick="clearHistory()">Clear History</button>
+    </div>
+  </div>
+</section>
+
+<section id="alerts">
+  <div class="container">
+    <div class="section-head">
+      <h2>Health Information Updates</h2>
+      <p>Visit trusted organizations for current public health updates.</p>
+    </div>
+    <div class="grid">
+      <article class="card"><h3>WHO News</h3><p>Official global health news and announcements.</p><a class="feature-link" href="https://www.who.int/news" target="_blank" rel="noopener">Read updates ↗</a></article>
+      <article class="card"><h3>WHO Disease Outbreak News</h3><p>Official outbreak reports and public health information.</p><a class="feature-link" href="https://www.who.int/emergencies/disease-outbreak-news" target="_blank" rel="noopener">Explore reports ↗</a></article>
+      <article class="card"><h3>NIH News</h3><p>Research and health-related updates.</p><a class="feature-link" href="https://www.nih.gov/news-events" target="_blank" rel="noopener">Read news ↗</a></article>
+    </div>
+  </div>
+</section>
+
+<section class="soft" id="profile">
+  <div class="container">
+    <div class="section-head">
+      <h2>Your Profile</h2>
+      <p>Choose a display name for this device.</p>
+    </div>
+    <div class="panel">
+      <label for="profileName">Display name</label>
+      <input id="profileName" maxlength="40" placeholder="Enter your name">
+      <button class="btn primary" onclick="saveProfile()">Save Profile</button>
+      <p id="profileMessage" class="status"></p>
+    </div>
+  </div>
+</section>
 </main>
 
 <footer>
-  <strong>Health Mirror</strong>
-  <p>FACTS REFLECT BETTER HEALTH</p>
-  <p>Reflect • Verify • Protect</p>
-  <p>© 2026 Health Mirror Project</p>
+  <p><strong>Health Mirror</strong> — Think Before You Trust.</p>
+  <p>Educational project about AI, health information, and misinformation.</p>
+  <p>AI results may be inaccurate. Always verify important health information with trusted sources.</p>
 </footer>
+  <script>
+const API_BASE = "https://health-mirror-ai-pzw0.onrender.com";
 
-<script>
 function toggleMenu() {
-  document.getElementById("navlinks").classList.toggle("open");
+  document.getElementById("mainNav").classList.toggle("open");
 }
 
-function analyzeClaim() {
-  const input = document.getElementById("claimInput");
-  const result = document.getElementById("claimResult");
-  const claim = input.value.trim();
+document.querySelectorAll("#mainNav a").forEach(link => {
+  link.addEventListener("click", () => {
+    document.getElementById("mainNav").classList.remove("open");
+  });
+});
 
-  if (!claim) {
-    result.textContent = "Please enter a health claim first.";
+// AI SERVICES
+async function callHealthMirrorAI(endpoint, text) {
+  if (!text || !text.trim()) {
+    throw new Error("Please enter some text first.");
+  }
+
+  const response = await fetch(API_BASE + endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      text: text.trim()
+    })
+  });
+
+  let data;
+
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error("The AI server returned an invalid response.");
+  }
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.error || "AI service is temporarily unavailable.");
+  }
+
+  if (!data.result) {
+    throw new Error("No analysis result was returned.");
+  }
+
+  return data.result;
+}
+
+function showResult(elementId, message, isError = false) {
+  const box = document.getElementById(elementId);
+  box.style.display = "block";
+  box.classList.toggle("error", isError);
+  box.textContent = message;
+}
+
+async function runAI(type) {
+  const settings = {
+    analyze: {
+      input: "claimInput",
+      result: "claimResult",
+      endpoint: "/analyze",
+      loading: "Health Mirror AI is analyzing your claim..."
+    },
+    community: {
+      input: "communityInput",
+      result: "communityResult",
+      endpoint: "/community-review",
+      loading: "AI is reviewing the community message..."
+    },
+    shield: {
+      input: "shieldInput",
+      result: "shieldResult",
+      endpoint: "/share-shield",
+      loading: "Share Shield is checking the sharing risk..."
+    }
+  };
+
+  const config = settings[type];
+
+  if (!config) return;
+
+  const text = document.getElementById(config.input).value;
+
+  if (!text.trim()) {
+    showResult(config.result, "Please enter a message to analyze.", true);
     return;
   }
 
-  result.innerHTML =
-    "<div class='panel'><h3>Claim Received</h3>" +
-    "<p>Your claim has been saved for review.</p>" +
-    "<p>Please consult trusted medical sources before accepting or sharing it.</p></div>";
+  const button = document.querySelector(
+    `[onclick="runAI('${type}')"]`
+  );
 
-  const history = JSON.parse(localStorage.getItem("hmHistory") || "[]");
-  history.unshift(claim);
-  localStorage.setItem("hmHistory", JSON.stringify(history.slice(0,10)));
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Analyzing...";
+  }
+
+  showResult(config.result, config.loading);
+
+  try {
+    const result = await callHealthMirrorAI(config.endpoint, text);
+
+    showResult(config.result, result);
+
+    saveToHistory(type, text, result);
+
+  } catch (error) {
+    showResult(
+      config.result,
+      "Unable to complete the AI analysis.\n\n" +
+      error.message +
+      "\n\nPlease try again later.",
+      true
+    );
+  } finally {
+    if (button) {
+      button.disabled = false;
+
+      const labels = {
+        analyze: "Analyze Claim",
+        community: "Review with AI",
+        shield: "Check Sharing Risk"
+      };
+
+      button.textContent = labels[type];
+    }
+  }
+}
+
+// AI HEALTH GUIDE
+async function runGuide() {
+  const input = document.getElementById("guideInput");
+  const button = document.querySelector(
+    '[onclick="runGuide()"]'
+  );
+
+  const question = input.value.trim();
+
+  if (!question) {
+    showResult("guideResult", "Please enter your question.", true);
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Thinking...";
+
+  showResult("guideResult", "Health Mirror AI is preparing an educational response...");
+
+  try {
+    const result = await callHealthMirrorAI("/analyze", question);
+
+    showResult(
+      "guideResult",
+      result + "\n\nNote: This is educational information, not personal medical advice."
+    );
+
+    saveToHistory("guide", question, result);
+
+  } catch (error) {
+    showResult(
+      "guideResult",
+      "The AI Guide could not respond.\n\n" + error.message,
+      true
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "Ask Health Mirror AI";
+  }
+}
+
+// HISTORY
+function getHistory() {
+  try {
+    return JSON.parse(localStorage.getItem("hmHistory") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveToHistory(type, text, result) {
+  const history = getHistory();
+
+  history.unshift({
+    type,
+    text,
+    result,
+    date: new Date().toLocaleString()
+  });
+
+  localStorage.setItem(
+    "hmHistory",
+    JSON.stringify(history.slice(0, 30))
+  );
+
   showHistory();
 }
 
 function showHistory() {
-  const history = JSON.parse(localStorage.getItem("hmHistory") || "[]");
   const list = document.getElementById("historyList");
+  const history = getHistory();
 
-  list.innerHTML = history.length
-    ? history.map(item => "<p></p>").join("")
-    : "No claims checked yet.";
-
-  if (history.length) {
-    list.innerHTML = "";
-    history.forEach(item => {
-      const p = document.createElement("p");
-      p.textContent = item;
-      list.appendChild(p);
-    });
+  if (!history.length) {
+    list.textContent = "No analyses saved yet.";
+    return;
   }
+
+  list.replaceChildren();
+
+  history.forEach(item => {
+    const article = document.createElement("article");
+    article.className = "card";
+    article.style.marginBottom = "14px";
+
+    const heading = document.createElement("h3");
+    heading.textContent = item.type.toUpperCase() + " REVIEW";
+
+    const date = document.createElement("p");
+    date.textContent = item.date;
+
+    const claim = document.createElement("p");
+    claim.textContent = item.text;
+
+    const result = document.createElement("p");
+    result.textContent = item.result;
+
+    article.append(heading, date, claim, result);
+    list.appendChild(article);
+  });
 }
 
 function clearHistory() {
+  if (!confirm("Clear all saved analysis history on this device?")) {
+    return;
+  }
+
   localStorage.removeItem("hmHistory");
   showHistory();
 }
 
-function addPost() {
-  const input = document.getElementById("communityInput");
-  const message = input.value.trim();
-
-  if (!message) {
-    alert("Please write a message first.");
-    return;
-  }
-
-  const posts = JSON.parse(localStorage.getItem("hmPosts") || "[]");
-  posts.unshift(message);
-  localStorage.setItem("hmPosts", JSON.stringify(posts));
-  input.value = "";
-  showPosts();
-}
-
-function showPosts() {
-  const posts = JSON.parse(localStorage.getItem("hmPosts") || "[]");
-  const container = document.getElementById("communityPosts");
-  container.innerHTML = "";
-
-  posts.forEach(message => {
-    const p = document.createElement("p");
-    p.textContent = message;
-    p.style.padding = "12px";
-    p.style.background = "#eaf9f5";
-    p.style.borderRadius = "12px";
-    container.appendChild(p);
-  });
-}
-
+// PROFILE
 function saveProfile() {
-  const name = document.getElementById("userName").value.trim();
+  const name = document.getElementById("profileName").value.trim();
 
   if (!name) {
     document.getElementById("profileMessage").textContent =
-      "Please enter a name.";
+      "Please enter a display name.";
     return;
   }
 
-  localStorage.setItem("hmUserName", name);
+  localStorage.setItem("hmProfileName", name);
+
   document.getElementById("profileMessage").textContent =
-    "Profile saved successfully!";
+    "Profile saved on this device.";
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+// INITIALIZATION
+document.addEventListener("DOMContentLoaded", () => {
   showHistory();
-  showPosts();
-  document.getElementById("userName").value =
-    localStorage.getItem("hmUserName") || "";
+
+  const savedName = localStorage.getItem("hmProfileName");
+
+  if (savedName) {
+    document.getElementById("profileName").value = savedName;
+  }
 });
 </script>
-
 </body>
 </html>
