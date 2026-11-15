@@ -1,0 +1,997 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Health Mirror | 25-Round Quiz Journey</title>
+<style>
+:root{--blue:#328fca;--teal:#20aeb0;--dark:#123b4b;--muted:#64818a;--mint:#dff5ec;--line:#dcefeb;--bg:#f4fbf9;
+--gold:#f59e0b;--gold-light:#fef3c7}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#f4fbf9,#e5f5f6);font-family:system-ui,-apple-system,Arial,
+sans-serif;color:var(--dark);min-height:100vh;overflow-x:hidden}
+.app{max-width:850px;margin:auto;padding:18px 14px 45px;position:relative}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px 3px 22px;gap:10px}
+.brand{font-size:21px;font-weight:800;display:flex;align-items:center;gap:10px}
+.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--teal));
+display:grid;place-items:center;color:white;font-size:23px;box-shadow:0 6px 14px rgba(32,174,176,0.25)}
+.sub{font-size:10px;letter-spacing:1.2px;color:var(--muted);margin-top:3px}
+.header-actions{display:flex;align-items:center;gap:8px}
+.tag{font-size:11px;font-weight:800;letter-spacing:1px;color:#168e91;background:#e7f7f3;border-radius:20px;
+padding:9px 12px}
+.sound-btn{border:1px solid var(--line);background:#fff;color:#168e91;border-radius:20px;padding:7px 11px;
+font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;box-shadow:0 2px 8px rgba(18,59,75,0.05)}
+.sound-btn:hover{background:#e7f7f3;border-color:var(--teal)}
+.sound-btn.muted{color:#8da3aa;background:#f7fbfa}
+.card{background:#fff;border:1px solid var(--line);border-radius:25px;padding:clamp(22px,5vw,40px);box-shadow:
+0 14px 36px #246a7514;position:relative;overflow:hidden}
+.screen{display:none}.screen.active{display:block;animation:appear .35s ease}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;color:#168f91;text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.15;margin:12px 0}
+h2{margin:10px 0;font-size:22px}
+p{color:var(--muted);line-height:1.65}
+.art{width:105px;height:105px;border-radius:32px;background:linear-gradient(145deg,#d9f5eb,#d9effb);display:
+grid;place-items:center;margin:18px 0;box-shadow:inset 0 2px 8px rgba(255,255,255,0.8)}
+.btn{border:0;border-radius:14px;padding:14px 21px;font-weight:800;font-size:15px;cursor:pointer;transition:
+transform .15s,box-shadow .15s}
+.btn:active{transform:scale(0.98)}
+.primary{background:linear-gradient(100deg,var(--blue),var(--teal));color:white;box-shadow:0 8px 18px
+#209eaa30}
+.primary:hover{box-shadow:0 10px 22px #209eaa48}
+.soft{background:#edf8f5;color:#187f83;border:1px solid var(--line)}
+.wide{width:100%;margin-top:18px}
+.pills{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0;align-items:center}
+.pill{font-size:12px;font-weight:700;color:#31727b;background:#eff9f6;border:1px solid var(--line);padding:
+7px 12px;border-radius:30px;display:inline-flex;align-items:center;gap:6px}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:
+6px}
+.progress{height:9px;background:#e8f2f1;border-radius:20px;overflow:hidden;margin:14px 0 22px}
+.bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));width:0;transition:width .3s}
+.q{font-size:clamp(20px,4vw,26px);line-height:1.38;margin:17px 0 21px;font-weight:700}
+.options{display:grid;gap:11px}
+.option{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:15px 16px;border:1.5px
+solid #dcebea;border-radius:15px;background:#fbfefd;color:var(--dark);font-weight:650;cursor:pointer;
+transition:all .18s}
+.option:hover:not(:disabled){border-color:var(--teal);background:#f1fbf8;transform:translateX(3px)}
+.letter{width:29px;height:29px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:
+#e8f5f5;color:#287e88;font-weight:800}
+.option.correct{background:#effaf3;border-color:#58b985}.option.wrong{background:#fff4f3;border-color:
+#e58b8b}.option:disabled{cursor:default}
+.feedback{display:none;padding:17px;border-radius:16px;margin-top:18px}.feedback.show{display:block;animation:
+appear .25s ease}
+.good{background:#effaf3;border:1px solid #c9ecd5}.bad{background:#fff7f3;border:1px solid #f2d9ca}
+.feedback h3{margin:0 0 6px}.feedback p{margin:7px 0;color:#46636b}
+.source{font-size:13px;color:#147e91;font-weight:800;text-decoration:none}.source:hover{text-decoration:
+underline}
+.nextrow{display:flex;justify-content:flex-end;margin-top:15px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}
+.stat{text-align:center;padding:15px 8px;background:#f2faf8;border:1px solid var(--line);border-radius:15px}
+.stat strong{display:block;font-size:23px;color:#167f8b}.stat span{font-size:12px;color:var(--muted)}
+/* SVG Medal & Badge Styles */
+.badgebox{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin:14px 0}
+.badge-card{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f7fcfa;border:1px solid
+#d6eee4;border-radius:15px;font-size:13px;font-weight:750;transition:all .25s;text-align:left}
+.badge-card.unlocked{background:linear-gradient(135deg,#ffffff,#eefaf6);border-color:#9ad8c1;box-shadow:0 4px
+12px rgba(32,174,176,0.08)}
+.badge-card.milestone-card.unlocked{background:linear-gradient(135deg,#fffdf5,#fef6db);border-color:#f3cf7a;
+box-shadow:0 4px 14px rgba(245,158,11,0.12)}
+.badge-card .b-info{display:flex;flex-direction:column;gap:2px}
+.badge-card .b-tier{font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:#168e91;font-weight:
+800}
+.badge-card.milestone-card .b-tier{color:#b45309}
+.medal-svg{display:inline-block;flex-shrink:0}
+.medal-sm{width:24px;height:24px}
+.medal-md{width:38px;height:38px}
+.medal-lg{width:118px;height:118px}
+/* Spotlight & Radiant Reveal Animation */
+.spotlight-overlay{position:fixed;inset:0;pointer-events:none;z-index:50;opacity:0;background:radial-gradient(
+circle at 50% 34%,rgba(255,250,210,0.92) 0%,rgba(50,185,180,0.38) 34%,rgba(18,59,75,0.18) 68%,transparent
+100%)}
+.spotlight-overlay.flash{animation:spotlightSweep 1.35s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes spotlightSweep{
+0%{opacity:0;transform:scale(0.65)}
+18%{opacity:1;transform:scale(1.04)}
+55%{opacity:0.85;transform:scale(1)}
+100%{opacity:0;transform:scale(1.12)}
+}
+.reveal-stage{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+margin:10px auto 14px;padding:18px 12px}
+.radiant-halo{position:absolute;width:210px;height:210px;border-radius:50%;background:radial-gradient(circle,
+rgba(254,240,138,0.85) 0%,rgba(45,212,191,0.32) 45%,transparent 72%);z-index:0;opacity:0;pointer-events:none}
+.radiant-halo.active{animation:haloPulse 2.2s ease-out forwards}
+@keyframes haloPulse{
+0%{opacity:0;transform:scale(0.3)}
+20%{opacity:1;transform:scale(1.15)}
+60%{opacity:0.75;transform:scale(1)}
+100%{opacity:0.25;transform:scale(0.95)}
+}
+.sunburst-rays{position:absolute;width:220px;height:220px;z-index:0;opacity:0;pointer-events:none;background:
+repeating-conic-gradient(from 0deg,rgba(253,224,71,0.28) 0deg 12deg,transparent 12deg 24deg);border-radius:
+50%;mask-image:radial-gradient(circle,black 25%,transparent 70%);-webkit-mask-image:radial-gradient(circle,
+black 25%,transparent 70%)}
+.sunburst-rays.active{animation:raysSpinFade 2.6s ease-out forwards}
+@keyframes raysSpinFade{
+0%{opacity:0;transform:scale(0.4) rotate(0deg)}
+20%{opacity:0.95;transform:scale(1.08) rotate(25deg)}
+100%{opacity:0;transform:scale(1) rotate(75deg)}
+}
+.medal-reveal-wrap{position:relative;z-index:2;transform:scale(0.4);opacity:0}
+.medal-reveal-wrap.pop{animation:medalPopIn 0.75s cubic-bezier(0.22,1.25,0.36,1) 0.1s forwards}
+@keyframes medalPopIn{
+</style>
+
+0%{opacity:0;transform:scale(0.35) translateY(16px)}
+65%{opacity:1;transform:scale(1.08) translateY(-4px)}
+100%{opacity:1;transform:scale(1) translateY(0)}
+}
+.unlocked-pill{position:relative;z-index:2;margin-top:10px;background:linear-gradient(90deg,#123b4b,#1b697a);
+color:#fff;padding:7px 16px;border-radius:99px;font-size:13px;font-weight:800;letter-spacing:0.5px;box-shadow:
+0 6px 16px rgba(18,59,75,0.18);opacity:0;transform:translateY(8px)}
+.unlocked-pill.pop{animation:pillSlideUp 0.5s ease 0.35s forwards}
+@keyframes pillSlideUp{to{opacity:1;transform:translateY(0)}}
+.milestone-banner{margin-top:16px;padding:14px 16px;border-radius:18px;background:linear-gradient(135deg,
+#fffbeb,#fef3c7);border:1.5px solid #f59e0b;display:flex;align-items:center;justify-content:center;gap:14px;
+text-align:left;box-shadow:0 8px 22px rgba(245,158,11,0.15);animation:appear 0.5s ease 0.45s backwards}
+.milestone-banner h3{margin:0 0 3px;font-size:15px;color:#92400e}
+.milestone-banner p{margin:0;font-size:12.5px;color:#78350f;line-height:1.4}
+.badge-quote-box{margin:12px auto 4px;max-width:520px;padding:14px 18px;border-radius:16px;background:linear-gradient(135deg,#f0faf7,#e6f6f8);border:1.5px solid #bce5dc;color:#123b4b;font-size:15px;font-weight:650;line-height:1.55;box-shadow:0 6px 18px rgba(32,174,176,0.08);position:relative;animation:appear 0.45s ease 0.25s
+backwards}
+.badge-quote-box .quote-tag{display:block;font-size:10.5px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#168e91;margin-bottom:4px}
+.center{text-align:center}.note{font-size:12px;color:#789198;margin-top:16px}
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:20px 0}
+.rounddot{border:1px solid var(--line);border-radius:12px;padding:9px 4px;text-align:center;background:
+#f7fcfa;font-size:11px;color:#64818a;display:flex;flex-direction:column;align-items:center;gap:3px}
+.rounddot.done{background:#e5f7ed;border-color:#a9ddbf;color:#247c51;font-weight:700}
+.rounddot.current{background:#e5f4fc;border-color:#8dc9e7;color:#166d9c;font-weight:800;box-shadow:0 3px 10px
+rgba(50,143,202,0.12)}
+
+/* Health Mirror original learning companion */
+.mascot-reaction{display:none;align-items:center;gap:14px;margin:16px 0 4px;padding:12px 15px;border:1px solid #ccebe5;border-radius:18px;background:linear-gradient(110deg,#f1fbf8,#f2f3ff);}
+.mascot-reaction.show{display:flex;animation:appear .3s ease;}
+.mascot-figure{width:76px;height:82px;flex:0 0 76px;display:grid;place-items:center;}
+.mascot-figure svg{width:74px;height:80px;overflow:visible;}
+.mascot-copy{min-width:0;}
+.mascot-title{font-weight:900;font-size:17px;letter-spacing:.5px;color:#168e91;margin-bottom:3px;}
+.mascot-subtitle{font-size:12px;line-height:1.45;color:#55737b;}
+.mascot-reaction.happy .mascot-title{color:#168a61;}
+.mascot-reaction.encourage .mascot-title{color:#6b65b8;}
+.mascot-reaction.happy .mascot-figure{animation:mascotBounce .55s ease;}
+.mascot-reaction.encourage .mascot-figure{animation:mascotNod .5s ease;}
+@keyframes mascotBounce{0%,100%{transform:translateY(0)}35%{transform:translateY(-9px) rotate(-5deg)}70%{transform:translateY(0) rotate(5deg)}}
+@keyframes mascotNod{0%,100%{transform:rotate(0)}35%{transform:rotate(-7deg)}70%{transform:rotate(5deg)}}
+@media(max-width:420px){.mascot-reaction{gap:9px;padding:10px}.mascot-figure{width:64px;flex-basis:64px}.mascot-figure svg{width:62px}.mascot-title{font-size:15px}}
+
+@media(max-width:520px){
+.card{padding:22px 16px}.stats{gap:7px}.stat strong{font-size:20px}.tag{display:none}
+.map{gap:5px}.rounddot{font-size:10px;padding:7px 2px}.badgebox{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<!-- Spotlight Flash Overlay -->
+<div class="spotlight-overlay" id="spotlightOverlay"></div>
+<div class="app">
+<header>
+<div class="brand">
+<div class="logo">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>
+</div>
+<div>Health Mirror<div class="sub">THINK. CHECK. MAKE HEALTHIER CHOICES.</div></div>
+</div>
+<div class="header-actions">
+<button class="sound-btn" id="soundToggle" title="Toggle sound effects" aria-label="Toggle sound effects">
+<svg id="soundIconOn" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11
+5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+<svg id="soundIconOff" style="display:none" width="16" height="16" viewBox="0 0 24 24" fill="none"
+stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5
+6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+<span id="soundText">Sound ON</span>
+</button>
+<div class="tag">25-ROUND JOURNEY</div>
+</div>
+</header>
+<main class="card">
+<section id="home" class="screen active">
+<div class="eyebrow">Your learning journey starts here</div>
+<div class="art" id="heroMedal"></div>
+<h1>Every question makes you a smarter health explorer.</h1>
+<p>Take your time, follow the evidence, and trust your ability to think critically. Complete 4 questions per
+round across 25 rounds to unlock all 5 official rank medals.</p>
+<div class="pills">
+<span class="pill">25 Rounds · 100 Questions</span>
+<span class="pill">5 Rank Tiers</span>
+<span class="pill">Evidence-Based</span>
+</div>
+<div id="journeySummary" style="font-size:14px;color:#31727b;font-weight:600;margin-top:8px"></div>
+<div class="map" id="roundMap"></div>
+<h2 style="margin-top:24px">Rank Tier Medals (Every 5 Rounds)</h2>
+<p class="note" style="margin-top:2px">Advance through 5 official mastery ranks as youcomplete each 5-round
+stage (20 questions per tier).</p>
+<div class="badgebox" id="milestoneCollection"></div>
+<h2 style="margin-top:24px">Round Distinction Medals (25 Rounds)</h2>
+<p class="note" style="margin-top:2px">Every completed round awards a custom vector medal for your collection.
+</p>
+<div class="badgebox" id="badgeCollection"></div>
+<button class="btn primary wide" id="begin">Continue journey →</button>
+<p class="note">Educational activity only. This quiz does not provide personal medicaladvice.</p>
+</section>
+
+<section id="quiz" class="screen">
+<div class="topline">
+<span class="eyebrow" id="roundLabel">ROUND 1 / 25</span>
+<span class="pill" id="qCount">Question 1 of 4</span>
+</div>
+<div class="topline">
+<span class="pill" id="badgeLabel"></span>
+<span class="pill" id="scoreLabel">0 points</span>
+</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="pills">
+<span class="pill" id="topic">Topic</span>
+<span class="pill" id="difficulty">Easy</span>
+</div>
+<div class="q" id="question"></div>
+<div class="options" id="options"></div>
+<div class="mascot-reaction" id="mascotReaction" aria-live="polite">
+<div class="mascot-figure" aria-hidden="true">
+<svg viewBox="0 0 100 108" role="img">
+<path d="M50 9v8" stroke="#20aeb0" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="7" r="5" fill="#f59e0b"/>
+<rect x="15" y="20" width="70" height="61" rx="20" fill="#fff" stroke="#b8e8df" stroke-width="3"/>
+<rect x="24" y="29" width="52" height="34" rx="12" fill="#173d4b"/>
+<g id="mascotEyes" fill="#7ff4dc"><circle cx="39" cy="45" r="4.5"/><circle cx="61" cy="45" r="4.5"/></g>
+<path id="mascotMouth" d="M42 54q8 7 16 0" fill="none" stroke="#7ff4dc" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M15 42H8v18h8M85 42h7v18h-8" fill="#dff5ec" stroke="#20aeb0" stroke-width="3" stroke-linejoin="round"/>
+<rect x="28" y="78" width="44" height="18" rx="8" fill="#e8f8f3" stroke="#b8e8df" stroke-width="2"/>
+<path d="M39 96v6m22-6v6" stroke="#20aeb0" stroke-width="4" stroke-linecap="round"/>
+<path d="M28 86h-8m52 0h8" stroke="#20aeb0" stroke-width="4" stroke-linecap="round"/>
+</svg>
+</div>
+<div class="mascot-copy"><div class="mascot-title" id="mascotTitle">EXCELLENT!</div><div class="mascot-subtitle" id="mascotSubtitle">You're checking the evidence like a pro.</div></div>
+</div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="nextrow"><button class="btn primary" id="next" style="display:none">Next →</button></div>
+<p class="note">Think critically. Check the evidence. Don't judge a claim by popularityalone.</p>
+</section>
+<section id="roundResult" class="screen center">
+<div class="eyebrow">ROUND COMPLETED</div>
+<div class="reveal-stage">
+<div class="sunburst-rays" id="sunburstRays"></div>
+<div class="radiant-halo" id="radiantHalo"></div>
+<div class="medal-reveal-wrap" id="resultMedalWrap"></div>
+<div class="unlocked-pill" id="resultBadgePill">Medal Unlocked</div>
+</div>
+<div class="badge-quote-box" id="badgeQuoteBox">
+<span class="quote-tag">Badge Motivation</span>
+<span id="badgeMotivationText"></span>
+</div>
+<h1 id="resultTitle">Nice work!</h1>
+<p id="resultText"></p>
+<div class="stats">
+<div class="stat"><strong id="correctStat">0/4</strong><span>Correct</span></div>
+<div class="stat"><strong id="pointsStat">0</strong><span>Points earned</span></div>
+<div class="stat"><strong id="accuracyStat">0%</strong><span>Accuracy</span></div>
+</div>
+<div id="newBadgeArea"></div>
+<button class="btn primary wide" id="continue">Continue to next round →</button>
+</section>
+<section id="journeyDone" class="screen center">
+<div class="eyebrow">JOURNEY COMPLETE</div>
+<div class="reveal-stage">
+<div class="radiant-halo active" style="opacity:0.65"></div>
+<div class="medal-reveal-wrap pop" id="finalMedalWrap"></div>
+</div>
+<h1>Health Guardian Unlocked!</h1>
+<p>You completed all 25 rounds and explored all 100 questions. Keep applying these evidence-checking skills
+to new health claims in everyday life.</p>
+<div class="stats">
+<div class="stat"><strong id="totalPoints">0</strong><span>Total points</span></div>
+<div class="stat"><strong>100</strong><span>Questions completed</span></div>
+<div class="stat"><strong>30</strong><span>Medals earned</span></div>
+</div>
+<button class="btn primary wide" id="restart">Start a fresh journey ↻</button>
+</section>
+</main>
+</div>
+<script>
+/* 100 Questions with robust, evergreen WHO, CDC, and NCCIH root & topic source URLs */
+const U_WHO = "https://www.who.int/health-topics/health-literacy";
+const U_INFODEMIC = "https://www.who.int/news-room/questions-and-answers/item/infodemic";
+const U_VACCINES = "https://www.who.int/health-topics/vaccines-and-immunization";
+const U_CDC = "https://www.cdc.gov/antibiotic-use/";
+const U_NCCIH = "https://www.nccih.nih.gov/health";
+const U_TRIALS = "https://www.nccih.nih.gov/health/clinical-trials-what-are-they";
+const QUESTIONS = [
+{"id": 1, "q": "A health post has 80,000 likes. What does that tell you about its accuracy?", "o": ["It is probably accurate", "It is popular, but popularity does not prove accuracy", "It has been medically reviewed"], "a": 1, "e": "Likes measure engagement, not scientific reliability. Check the evidence and source. ", "t": "Social media", "s": "WHO — Health literacy", "u": U_WHO, "d": 0},
+{"id": 2, "q": "Which source is usually the best starting point for general public-health guidance?", "o": [
+"An anonymous comment", "A national public-health agency", "A celebrity's personal page"], "a": 1, "e":
+"Public-health agencies publish guidance informed byevidence and expert review. Check dates and local context. ", "t": "Reliable sources", "s": "WHO — Health literacy", "u": U_WHO, "d": 0},
+{"id": 3, "q": "What does health misinformation mean?", "o": ["False or inaccurate health information shared without necessarily intending to deceive", "Any new medical discovery", "Only information shared by doctors"],
+"a": 0, "e": "Misinformation is false or inaccurate information, whether or not the person sharing it intends to deceive.", "t": "Definitions", "s": "WHO — Infodemic Q&A", "u": U_INFODEMIC, "d": 0},
+{"id": 4, "q": "What is disinformation?", "o": ["A harmless typo", "Accurate information in a long article",
+"False information deliberately created or shared to deceive"], "a": 2, "e": "Disinformation involves deliberate deception; misinformation does not necessarily involve intent.", "t": "Definitions", "s": "WHO — Infodemic Q&A", "u": U_INFODEMIC, "d": 0},
+{"id": 5, "q": "Why should you check the date on a health article?", "o": ["Dates makearticles look professional", "Recommendations and evidence can change over time", "Newerarticles are always correct"], "a":
+1, "e": "A date helps you judge whether information may be outdated; it does not guarantee accuracy.", "t":
+"Checking information", "s": "WHO— Health literacy", "u": U_WHO, "d": 0},
+{"id": 6, "q": "A video says a remedy works because 'everyone is using it.' What is missing?", "o": [
+"Evidence that it is safe and effective", "More followers", "A catchy title"], "a": 0, "e": "Popularity is not evidence of effectiveness or safety.", "t": "Persuasion tactics", "s": "WHO — Health literacy", "u":
+U_WHO, "d": 0},
+{"id": 7, "q": "Which detail helps you assess a health website?", "o": ["Its backgroundcolor", "How many emojis it uses", "Who wrote it and what expertise they have"], "a": 2,"e": "Authorship and relevant expertise help you assess accountability and credibility.", "t": "Source checking", "s": "WHO — Health literacy", "u":
+U_WHO, "d": 0},
+{"id": 8, "q": "What should you do before forwarding a surprising health claim?", "o":["Pause and verify it with reliable sources", "Forward it quickly", "Add a warning emojiand send it"], "a": 0, "e": "Pausing before sharing helps reduce the spread of false or misleading claims.", "t": "Sharing responsibly", "s": "WHO — Health literacy", "u": U_WHO,"d": 0},
+{"id": 9, "q": "A post says a product is 'natural.' What can you conclude about safety?", "o": ["Natural means harmless", "Natural products can still have risks or side effects", "It is safe if many people buy it"],
+"a": 1, "e": "Natural does not automatically meansafe. Products can have side effects or interact with medicines.", "t": "Product claims", "s": "NCCIH — Health Information", "u": U_NCCIH, "d": 0},
+{"id": 10, "q": "Which is stronger evidence for a health claim?", "o": ["A celebrity endorsement", "One anonymous testimonial", "A body of well-designed scientific research"],"a": 2, "e": "Personal stories and endorsements cannot establish whether an interventionworks.", "t": "Evidence", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 0},
+{"id": 11, "q": "What do vaccines help the immune system do?", "o": ["Recognize and respond to specific pathogens", "Treat every infection after it starts", "Replace all otherhealth measures"], "a": 0, "e":
+"Vaccines train the immune system to recognize particularpathogens; protection varies by vaccine.", "t":
+"Vaccines", "s": "WHO — Vaccines and Immunization", "u": U_VACCINES, "d": 0},
+{"id": 12, "q": "Antibiotics are designed to treat which type of infection?", "o": ["Viral infections such as colds", "Bacterial infections", "Every type of infection"], "a": 1, "e": "Antibiotics act against bacteria, not viruses. A clinician can advise when they are appropriate.", "t": "Antibiotics", "s": "CDC — Antibiotic Use", "u": U_CDC, "d": 0},
+{"id": 13, "q": "A post promises a 'miracle cure.' What is a sensible reaction?", "o":["Assume it is advanced science", "Buy it before it sells out", "Be cautious and look forstrong independent evidence"], "a": 2, "e":
+"Miracle-cure promises are a warning sign. Check evidence, risks, and independent sources.", "t": "Red flags",
+"s": "WHO — Health literacy", "u": U_WHO, "d": 0},
+{"id": 14, "q": "What is one useful question when evaluating a health claim?", "o": ["Who is making this claim, and what evidence supports it?", "How dramatic is the picture?","How many times was it reposted?"],
+"a": 0, "e": "Checking authorship and supporting evidence is central to evaluating health information.", "t":
+"Source checking", "s": "WHO —Health literacy", "u": U_WHO, "d": 0},
+{"id": 15, "q": "A friend shares a personal recovery story. What does it prove?", "o":["That the same treatment will work for everyone", "That the person reports that experience, but not that it works for everyone", "That clinical research is unnecessary"], "a": 1, "e": "A personal story may be sincere, but it cannot establish cause and effect or general effectiveness.", "t": "Testimonials", "s": "NCCIH — Clinical Studies", "u": U_TRIALS,"d": 0},
+{"id": 16, "q": "What is health literacy?", "o": ["Memorizing medical vocabulary", "Being able to diagnose every illness", "Finding, understanding, evaluating, and using healthinformation"], "a": 2, "e": "Health literacy includes accessing, understanding, appraising, and using health information and services.", "t":
+"Health literacy", "s": "WHO — Health literacy", "u": U_WHO, "d": 0},
+{"id": 17, "q": "A health claim appears in a forwarded message with no source. What isthe best next step?",
+"o": ["Treat it as unverified and look for the original source", "Assume it is true because a friend sent it",
+
+"Share it to ask others"], "a": 0, "e": "Forwarded messages often remove context. Look for an identifiable original source and supporting evidence.", "t": "Forwarded claims", "s": "WHO — Health literacy", "u": U_WHO,
+"d": 0},
+{"id": 18, "q": "Which statement about online reviews is most accurate?", "o": ["A five-star rating proves a treatment works", "Reviews can describe experiences but cannot replace clinical evidence", "A large number of reviews proves safety"], "a": 1, "e": "Reviewsmay be useful for understanding experiences, but they do not establish medical effectiveness or safety.", "t": "Reviews", "s": "NCCIH — Health Information", "u": U_NCCIH,
+"d": 0},
+{"id": 19, "q": "Why can a very emotional health post be persuasive?", "o": ["Emotion always means the claim is false", "Emotional posts are always accurate", "Strong emotionscan influence judgment and sharing"], "a":
+2, "e": "Fear, hope, and anger can make content feel urgent. Emotion is a reason to pause and verify, not proof either way.", "t": "Persuasion tactics", "s": "WHO — Infodemic Q&A", "u": U_INFODEMIC, "d": 0},
+{"id": 20, "q": "What should a trustworthy correction include?", "o": ["A clear explanation and links to reliable evidence", "Insults toward the person who shared the claim", "A new unsupported claim"], "a": 0, "e":
+"A useful correction addresses the claim clearlyand points readers toward evidence.", "t": "Corrections",
+"s": "WHO — Health literacy", "u": U_WHO, "d": 0},
+{"id": 21, "q": "A study finds that people who eat a certain food are healthier. What does this alone show?",
+"o": ["The food definitely caused better health", "An associationthat may have other explanations", "Everyone should eat that food"], "a": 1, "e": "Observational associations do not by themselves establish causation; other factors may explainthe relationship.", "t": "Correlation", "s": "NCCIH — Clinical Studies", "u":
+U_TRIALS, "d": 1},
+{"id": 22, "q": "A study includes only 14 participants. What is the most careful interpretation?", "o": ["It proves the treatment works for everyone", "Small studies are alwaysfake", "It may offer an early clue but is not enough on its own for a broad conclusion"], "a": 2, "e": "Small studies can be useful early evidence, but results may be uncertainand may not generalize.", "t": "Study size", "s": "NCCIH — Clinical Studies", "u":
+U_TRIALS, "d": 1},
+{"id": 23, "q": "A paper studies adults over 70, but a post applies the result to teenagers. What is the key concern?", "o": ["The study group may not represent teenagers", "The paper must be fraudulent", "Age never affects health research"], "a": 0, "e": "Findingsshould be interpreted in relation to the population studied; they may not generalize toanother age group.", "t": "Generalizability", "s": "NCCIH — Clinical Studies", "u":
+U_TRIALS, "d": 1},
+{"id": 24, "q": "A health article links to a scientific paper. What should you check?","o": ["Only the paper's title", "Whether the paper's methods and findings support the exact claim", "Whether the article has a colorful chart"], "a": 1, "e": "A citation is notenough. Check what the study actually tested, found, and concluded.", "t": "Citations", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 25, "q": "Why is a single study rarely the whole story?", "o": ["All studies areunreliable", "The newest study always replaces every older one", "Methods and results need to be considered alongside the wider body of evidence"], "a": 2, "e": "Evidence is assessed across study quality, consistency, relevance, and limitations.", "t": "Evidence synthesis", "s": "NCCIH — Health Information", "u": U_NCCIH, "d": 1},
+{"id": 26, "q": "A post reports a 50% increase but hides the starting number. What is missing?", "o": ["The baseline or absolute risk", "The author's photo", "The number of comments"], "a": 0, "e": "Relative changes can sound dramatic without the baseline. Absolutenumbers provide important context.", "t": "Risk statistics",
+"s": "NCCIH — Health Information", "u": U_NCCIH, "d": 1},
+{"id": 27, "q": "A study finds a statistically significant difference that is tiny. What else matters?", "o":
+["Only the word significant", "The size and practical importance of the effect", "Whether the headline is exciting"], "a": 1, "e": "Statistical significance does not automatically mean a large or meaningful real- world benefit.", "t": "Statistics", "s": "NCCIH — Health Information", "u": U_NCCIH, "d": 1},
+{"id": 28, "q": "Two variables rise together over time. What can you safely say?", "o":["One must have caused the other", "The relationship is proof of a treatment effect", "They are associated, but causation needs more evidence"], "a": 2, "e": "Correlation alonecannot show that one variable caused the other.", "t":
+"Correlation", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 1},
+{"id": 29, "q": "A product seller writes a glowing review of their own product. What should you consider?",
+"o": ["A possible financial conflict of interest", "That the productis proven", "That independent evidence is unnecessary"], "a": 0, "e": "Financial interests can influence how information is presented. Seek independent evidence and disclosures.", "t": "Conflicts of interest", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 30, "q": "A post quotes a scientist but cuts off the next sentence. What shouldyou do?", "o": ["Trust the quote because the name is famous", "Find the original statement and read its context", "Judge the quote by its font"], "a": 1, "e": "A genuine quote can mislead when taken out of context. Check the original source. ", "t": "Context", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 31, "q": "A preprint has not yet been peer reviewed. How should you treat it?","o": ["As a settled medical guideline", "As proof that all other research is wrong", "Aspreliminary research that needs cautious interpretation"], "a": 2, "e": "Preprints can share research quickly, but they have not necessarily undergone peer review.", "t": "Preprints", "s": "NCCIH — Health Information", "u": U_NCCIH, "d": 1},
+{"id": 32, "q": "A post cites only studies that support its conclusion. What warning sign is this?", "o": [
+"Cherry-picking evidence", "Random assignment", "Blinding"], "a": 0,"e": "Cherry-picking means selecting supportive evidence while ignoring relevant contraryfindings.", "t": "Cherry-picking", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 33, "q": "A study tests a supplement while participants also change diet and exercise. What complicates the conclusion?", "o": ["The supplement must be the cause", "Other changes may influence the outcome", "The result proves all supplements work"], "a": 1,"e": "When several factors change together, it can be difficult to isolate which factor caused an outcome.", "t": "Confounding", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 1},
+{"id": 34, "q": "A treatment helps a group in a supervised trial. What is needed beforeclaiming it works for everyone?", "o": ["A celebrity endorsement", "A viral video", "Evidence across relevant populations and settings"], "a": 2, "e": "Results from one group orsetting may not apply broadly; further evidence may be needed.", "t": "Generalizability", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 1},
+{"id": 35, "q": "Why should you check how a study measured its outcome?", "o": ["The measurement method affects what the results mean", "The method is never important", "Only the conclusion matters"], "a": 0, "e":
+"The outcome measure helps determine what a study can and cannot establish.", "t": "Study methods", "s":
+"NCCIH — Clinical Studies", "u": U_TRIALS, "d": 1},
+{"id": 36, "q": "A headline says a food 'prevents disease,' but the study measured a short-term lab marker. What is the mismatch?", "o": ["The headline is always correct", "Theclaim goes beyond what the study measured", "Lab markers are never useful"], "a": 1, "e": "A change in a marker does not automatically prove prevention of disease or improved long-term health.", "t": "Outcome measures", "s": "NCCIH — Health Information", "u": U_NCCIH, "d": 1},
+{"id": 37, "q": "A study reports an effect in mice. What can you conclude about humans?", "o": ["The same effect is guaranteed in humans", "Animal studies are meaningless", "Itmay guide research, but human evidence is needed to know how it applies to people"], "a": 2, "e": "Animal research can inform questions, but results do not automatically translate to human health.", "t": "Research stages", "s": "NCCIH — Health Information",
+"u": U_NCCIH, "d": 1},
+{"id": 38, "q": "A post says 'doctors agree' but names no organizations or evidence. What is the best response?", "o": ["Look for named experts, relevant guidance, and supporting evidence", "Assume it is true",
+"Count how many times it appears"], "a": 0, "e": "Vague appeals to authority are difficult to verify. Look for specific, accountable sources.","t": "Appeals to authority", "s": "WHO — Health literacy", "u": U_WHO,
+"d": 1},
+{"id": 39, "q": "Why do researchers report limitations?", "o": ["To make the study sound weaker", "To show what the study can and cannot tell us", "Because the results are always false"], "a": 1, "e": "Limitations help readers interpret the strength, scope, and uncertainty of findings.", "t": "Study limitations", "s":
+"NCCIH — Clinical Studies", "u": U_TRIALS, "d": 1},
+{"id": 40, "q": "A study has no comparison group. Why might that matter?", "o": ["It proves the intervention worked", "It makes the result automatically invalid", "It may be hard to tell whether the outcome was due to the intervention or other factors"], "a": 2, "e": "Without an appropriate comparison, other explanations for an observed change may be difficult to rule out.", "t": "Study design", "s": "NCCIH — Clinical Studies", "u":
+U_TRIALS, "d": 1},
+
+{"id": 41, "q": "A post says 'Big Pharma does not want you to know this secret.' Which tactic is most obvious?", "o": ["Conspiracy framing", "Transparent evidence review", "Random sampling"], "a": 0, "e":
+"Conspiracy framing can discourage checking evidence by suggesting that all disagreement is part of a cover- up.", "t": "Conspiracy framing", "s": "WHO — Infodemic Q&A", "u": U_INFODEMIC, "d": 1},
+{"id": 42, "q": "A video uses a countdown timer to pressure viewers to buy a health product. What tactic is this?", "o": ["Peer review", "Artificial urgency", "A controlled trial"], "a": 1, "e": "Urgency can push people to act before checking a claim or product carefully.", "t": "Urgency", "s": "WHO — Health literacy",
+"u": U_WHO, "d": 1},
+{"id": 43, "q": "A post shows a white coat and medical-looking graphics but gives no source. What should you remember?", "o": ["Appearance proves expertise", "Design is more important than evidence", "Professional- looking presentation is not proof of credibility"],"a": 2, "e": "Visual signals can create an impression of authority, but claims still need verifiable evidence.", "t": "Visual persuasion", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 44, "q": "A creator says 'I am not a doctor, but this cured my condition.' What is the key limitation?",
+"o": ["A personal anecdote cannot establish that the product caused recovery", "The disclaimer makes the claim proven", "The story replaces controlled research"], "a": 0, "e": "A disclaimer does not turn an anecdote into scientific evidence.", "t": "Testimonials", "s": "NCCIH — Health Information", "u": U_NCCIH,
+"d": 1},
+{"id": 45, "q": "A post says 'Only foolish people question this treatment.' What tactic is being used?", "o": [
+"Balanced discussion", "Shaming or social pressure", "Evidence grading"], "a": 1, "e": "Shaming discourages questions and critical evaluation; it does not support the claim.", "t": "Social pressure", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 46, "q": "A message combines a real statistic with an unrelated alarming image. What should you check?",
+"o": ["Whether the image is dramatic", "Whether the post has many shares", "Whether the statistic and image are genuinely connected"], "a": 2, "e": "A real statistic can be used misleadingly when paired with unrelated visuals or context.", "t": "Misleading visuals", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 47, "q": "A post says 'This worked for my neighbor, so it will work for you.' What reasoning error appears?", "o": ["Overgeneralizing from one case", "A systematic review", "A randomized trial"], "a": 0, "e":
+"One person's experience cannot establish what will happen to other people.", "t": "Overgeneralization", "s":
+"NCCIH — Health Information", "u": U_NCCIH, "d": 1},
+{"id": 48, "q": "A headline says 'Doctors hate this one trick.' What does the wording try to do?", "o": [
+"Present balanced evidence", "Create curiosity and distrust through sensational framing", "Explain study limitations"], "a": 1, "e": "Sensational language can attract attention while providing little verifiable information.", "t": "Sensational headlines", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 49, "q": "A video repeats a claim many times but never provides evidence. Why can repetition be misleading?", "o": ["Repetition proves the claim", "Repeated claims become official guidance", "Familiarity can make a claim feel true without adding evidence"],"a": 2, "e": "Repeated exposure can increase familiarity, but familiarity is not proof.","t": "Repetition", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 50, "q": "A post uses a real expert's photo beside a product they never endorsed. What is the issue?",
+"o": ["False endorsement or misleading association", "A clinical guideline", "A transparent disclosure"], "a": 0, "e": "A person's image can be used to imply endorsement without permission or evidence.", "t": "False endorsement", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 51, "q": "A creator says a treatment is 'chemical-free.' What is wrong with this phrase?", "o": ["It proves the product is safe", "Everything made of matter consists of chemicals, so the phrase is not a meaningful safety test", "It means the product was tested in a hospital"], "a": 1, "e": "'Chemical-free' is a misleading marketing phrase; safety depends on the substance, exposure, and evidence.", "t": "Marketing language", "s": "NCCIH — Health Information", "u": U_NCCIH, "d": 1},
+{"id": 52, "q": "A post presents two choices: 'Use this supplement or stay sick forever.' What tactic is this?", "o": ["A balanced comparison", "A peer-reviewed conclusion", "A false dilemma that ignores other options"], "a": 2, "e": "False dilemmas present limited choices while ignoring alternatives and nuance.", "t":
+"Logical fallacies", "s": "WHO —Health literacy", "u": U_WHO, "d": 1},
+{"id": 53, "q": "A message claims a treatment is suppressed because it is cheap. What evidence is still needed?", "o": ["Independent evidence that it is safe and effective", "A more dramatic story", "Proof that the company is unpopular"], "a": 0, "e": "A claim about suppression does not establish effectiveness; the treatment still needs reliable evidence.", "t": "Conspiracy claims", "s": "WHO — Health literacy", "u": U_WHO,
+"d": 1},
+{"id": 54, "q": "A post includes a chart with a truncated vertical axis. What could this do?", "o": ["Make every difference disappear", "Make a small difference look much larger", "Prove the data were collected randomly"], "a": 1, "e": "Axis choices can visually exaggerate differences. Read chart labels and scales carefully.", "t": "Data visualization", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 55, "q": "A post uses a testimonial from a famous athlete to promote a supplement. What does fame establish?", "o": ["Clinical effectiveness", "Absence of side effects","Only that a famous person is promoting it"], "a": 2, "e": "Celebrity status is not medical evidence or proof of product safety.", "t":
+"Celebrity endorsements", "s": "NCCIH — Health Information", "u": U_NCCIH, "d": 1},
+{"id": 56, "q": "A claim is framed as 'They laughed at the idea, then it changed medicine.' What is the risk?", "o": ["It uses a dramatic story to imply that criticism proves a claim is correct", "It reports a systematic review", "It gives absolute risk"], "a": 0,"e": "Being criticized does not prove a claim is true. Evidence must be evaluated on its merits.", "t": "Narrative persuasion", "s": "WHO — Health literacy", "u":
+U_WHO, "d": 1},
+{"id": 57, "q": "A post says a treatment is safe because no one in the comments reported harm. What is the problem?", "o": ["Comments are a complete safety database", "Absence of reports in comments does not establish safety", "Every user has the same risk"], "a":1, "e": "Social-media comments are not systematic safety monitoring and may miss harms or context.", "t": "Safety claims", "s": "NCCIH — Health Information", "u":
+U_NCCIH, "d": 1},
+{"id": 58, "q": "A message labels all mainstream sources as untrustworthy and says to trust only its author. What is a warning sign?", "o": ["Open scientific debate", "Independent verification", "An attempt to isolate readers from other sources"], "a": 2, "e": "Discouraging all independent checking can make a claim harder to verify.", "t": "Source isolation", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 59, "q": "A post presents a graph but hides where the data came from. What should you ask?", "o": [
+"Where the data came from and how they were collected", "Whether the graph is colorful", "Whether the post is short"], "a": 0, "e": "Data provenance and collection methods are essential for judging a graph's meaning.",
+"t": "Data sources", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+{"id": 60, "q": "A health influencer earns commission from a product but does not disclose it. Why does that matter?", "o": ["It makes the product automatically unsafe", "It hides a possible incentive that could affect the recommendation", "It proves the influencer has medical training"], "a": 1, "e": "Undisclosed financial incentives make it harder for audiences to assess potential bias.", "t": "Conflicts of interest", "s": "WHO — Health literacy", "u": U_WHO, "d": 1},
+
+{"id": 61, "q": "You see a claim about a new vaccine. Which source path is strongest?","o": ["A forwarded voice note", "A meme account", "Check the relevant public-health agency and the underlying research"], "a": 2,
+"e": "For vaccine claims, consult reliable public-health guidance and examine the evidence behind the specific claim.", "t": "Vaccines","s": "WHO — Vaccines and Immunization", "u": U_VACCINES, "d": 2},
+{"id": 62, "q": "A relative shares a false health claim. What response is most likely to keep discussion constructive?", "o": ["Ask where it came from and share a clear, respectful correction", "Mock them in the group chat", "Send ten unrelated links"], "a": 0, "e": "Respectful corrections can keep communication open and focus attention on the evidence.", "t": "Communicating corrections", "s": "WHO — Health literacy", "u":
+U_WHO, "d": 2},
+{"id": 63, "q": "A search result is the first item on the page. Does ranking prove reliability?", "o": ["Yes, first result means most accurate", "No, ranking is not a quality guarantee", "Only if it has an image"], "a":
+1, "e": "Search position can reflect many factors and is not a substitute for evaluating source quality.",
+"t": "Search literacy", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 64, "q": "A health claim appears on a government website from eight years ago. What should you do?",
+"o": ["Assume it is current forever", "Ignore every government source", "Check whether the page is updated and compare with current guidance"], "a": 2, "e":"Even reputable sources can become outdated. Check update dates and current recommendations.", "t": "Recency", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 65, "q": "A post claims a supplement prevents every cold. What is the best evaluation?", "o": ["The absolute promise is a red flag; look for evidence for that exact claim", "It must work because prevention sounds positive", "Try it because it is natural"], "a": 0, "e": "Broad promises such as preventing every illness are unlikely to reflect thelimits of health evidence.", "t": "Overclaiming", "s": "NCCIH — Health Information", "u":U_NCCIH, "d": 2},
+{"id": 66, "q": "A friend asks whether to stop prescribed treatment after watching a video. What is the safest reply?", "o": ["Tell them to stop immediately", "Encourage them to discuss concerns with a qualified healthcare professional before changing treatment", "Choose a different treatment for them"], "a": 1, "e":
+"Social-media content cannot assessan individual's medical situation. Treatment decisions need qualified care. ", "t": "Medical decisions", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 67, "q": "You cannot find the original source for a dramatic health statistic. What should you do?",
+"o": ["Repeat it with 'maybe'", "Assume it came from a study", "Do not present it as verified; keep searching or leave it out"], "a": 2, "e": "If a statisticcannot be traced to a credible source, it should not be shared as established fact.", "t": "Verification", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 68, "q": "A fact-check says a claim is 'missing context.' What does that usuallymean?", "o": ["Some details may be true, but the presentation leaves out information needed to understand them", "Every word is necessarily invented", "The claim is automatically harmless"], "a": 0, "e": "A claim can use true details while omitting context that changes the overall impression.", "t": "Context", "s": "WHO — Health literacy",
+"u": U_WHO, "d": 2},
+{"id": 69, "q": "A medical article discusses a treatment for a rare condition. Why should you not assume it applies to a different condition?", "o": ["All conditions respond the same way", "Evidence for one condition does not automatically apply to another", "Rare-condition research is never valid"], "a": 1, "e": "Evidence is specific to the condition,population, and intervention studied.", "t": "Applicability", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 2},
+{"id": 70, "q": "A post says a test is '99% accurate.' What follow-up information matters?", "o": ["Only the product logo", "How many followers the author has", "What accuracymeans, the population tested, and false- positive and false-negative rates"], "a": 2, "e":"A single accuracy figure may hide important details about the test and the population in which it was evaluated.", "t": "Diagnostic tests", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 71, "q": "A correction repeats a false claim in a huge headline. What risk can this create?", "o": [
+"It may increase familiarity with the false claim if the correction is unclear", "It guarantees everyone will reject the claim", "It makes evidence unnecessary"], "a": 0, "e": "Corrections should clearly state the accurate information and avoid unnecessarily amplifying the falsehood.", "t": "Correction design", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 72, "q": "A user uploads a screenshot with no date or account name. What can thetool responsibly say?",
+"o": ["It can identify the author with certainty", "It can assess the visible claim but should not assume missing context", "It can confirm the screenshot is genuine"], "a": 1, "e": "A screenshot may omit important context. A tool should distinguish visible content from details it cannot verify.", "t": "Screenshot limits", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 73, "q": "A study reports a relative risk reduction. What additional figure helps readers understand the practical effect?", "o": ["The number of likes", "The author's job title", "The absolute risk difference"], "a": 2, "e": "Absolute risk helps put relative changes into context.", "t": "Risk statistics", "s": "NCCIH — Health Information", "u": U_NCCIH, "d": 2},
+{"id": 74, "q": "A clinical trial is randomized. What does random assignment help with?", "o": ["Reducing systematic differences between groups", "Guaranteeing there are no limitations", "Proving every participant benefits"], "a": 0, "e": "Random assignment helps balance known and unknown factors between groups, though it does not remove every limitation.", "t": "Randomization", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 2},
+{"id": 75, "q": "A trial is double-blind. What is the main purpose?", "o": ["To hide all results from the public", "To reduce the influence of expectations on participants and researchers", "To guarantee the treatment works"], "a": 1, "e": "Blinding can reduce certain forms of bias, but it does not guarantee a positive or reliable result.", "t": "Blinding", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 2},
+{"id": 76, "q": "A study has a conflict-of-interest disclosure. What should readers do?", "o": ["Reject it automatically", "Ignore the disclosure", "Consider the possible influence and assess the methods and evidence"], "a": 2, "e": "A disclosure is useful context, not automatic proof that findings are false or true.", "t": "Conflicts of interest", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 2},
+{"id": 77, "q": "A health claim is supported by a systematic review. What should you still examine?", "o": ["The review methods, included studies, and limitations", "Only the journal cover", "Whether the title sounds certain"], "a": 0, "e": "Systematic reviews use structured methods, but their reliability still depends on the evidence and methods.", "t": "Systematic reviews", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 2},
+{"id": 78, "q": "A study reports a result with a wide confidence interval. What does that suggest?", "o": ["The estimate is exact", "There is considerable uncertainty about the estimate", "The result is guaranteed to be false"], "a": 1, "e": "Wide confidence intervals indicate less precision and more uncertainty around an estimate.", "t": "Uncertainty", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 2},
+{"id": 79, "q": "A trial excludes people with several common conditions. What is an important limitation?", "o": ["The results apply to everyone", "The exclusions never matter", "The findings may not generalize to people who were excluded"], "a": 2, "e": "Trial eligibility affects who the results can be generalized to. People unlike participants may need different evidence.", "t": "External validity", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 2},
+{"id": 80, "q": "A post compares two treatments but one group started out much healthier. What issue may distort the comparison?", "o": ["A catchy headline", "Baseline differences between groups", "The number of emojis"], "a": 1, "e": "Differences at the start canaffect outcomes and complicate interpretation of comparisons.", "t": "Study design", "s":"NCCIH — Clinical Studies", "u": U_TRIALS, "d": 2},
+{"id": 81, "q": "A tool finds no reliable source for a claim after searching. What is the most honest output?", "o": ["Declare the claim false with certainty", "Invent a source", "Say it could not verify the claim and explain what was checked"], "a": 2, "e": "Not finding evidence is not always proof of falsity. A responsible tool reports the limits ofits search.", "t": "Verification limits", "s": "WHO — Health literacy",
+"u": U_WHO, "d":2},
+{"id": 82, "q": "A health post is partly correct but omits a major risk. What label ismost useful?", "o": [
+"Misleading or incomplete, with an explanation of the omitted risk","Completely true", "Completely false without explanation"], "a": 0, "e": "A nuanced assessment can distinguish accurate elements from missing information that changes the impression.", "t": "Nuanced claims", "s": "WHO — Health literacy", "u": U_WHO,
+"d": 2},
+{"id": 83, "q": "A study reports an average benefit. Why might individual outcomes differ?", "o": ["The average guarantees the same result for everyone", "People, conditions, and responses can vary", "Averages are never useful"], "a": 1, "e": "An average describesa group and does not predict every individual's outcome.",
+"t": "Individual variation", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 2},
+{"id": 84, "q": "A post cites a systematic review, but the review included low-qualitystudies. What matters?",
+"o": ["The title alone", "The number of pages", "The quality andlimitations of the included studies"], "a":
+2, "e": "A review's conclusions depend partly on the quality of the studies it includes.", "t": "Systematic reviews", "s": "NCCIH — Clinical Studies", "u": U_TRIALS, "d": 2},
+{"id": 85, "q": "A chart starts its vertical axis at 95 rather than zero. What should areader examine?", "o":
+["The scale, because it may visually magnify a small difference","Only the chart title", "The author's profile picture"], "a": 0, "e": "Truncated axes can exaggerate visual differences. Read the scale and underlying values.", "t": "Chart literacy", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 86, "q": "A claim is repeated by several websites, all citing the same originalunsourced post. What is this?", "o": ["Independent confirmation from many sources", "An echo of one unverified source, not multiple independent confirmations", "A clinical consensus"], "a": 1, "e": "Many copies of one claim do not create independent evidence. Trace sources back to their origin.", "t": "Source tracing", "s": "WHO — Health literacy", "u":U_WHO, "d": 2},
+{"id": 87, "q": "An AI checker gives a confidence score of 98%. What should users stillbe able to inspect?",
+"o": ["Nothing; the score is enough", "Only the color of the result", "The evidence, sources, uncertainty, and explanation behind the assessment"], "a": 2,"e": "A confidence score is not a substitute for transparent evidence and a clear explanation.", "t": "AI transparency", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 88, "q": "A health claim changes wording each time it is shared. What should a fact-checker do?", "o":
+["Identify the precise version being assessed and trace its source", "Treat every version as identical",
+"Choose the easiest wording and ignore the rest"],"a": 0, "e": "Fact-checking needs a clearly defined claim; small wording changes can change what is being asserted.", "t": "Claim definition", "s": "WHO — Health literacy", "u":U_WHO, "d": 2},
+{"id": 89, "q": "A study has a strong design but very few participants and wide confidence intervals. What does that suggest?", "o": ["The result is perfectly precise", "Theremay be substantial uncertainty around the estimate", "The study must be fabricated"], "a": 1, "e": "Wide confidence intervals indicate imprecision; the estimate may be compatiblewith a range of effects.", "t": "Uncertainty", "s": "NCCIH — Clinical Studies", "u":
+U_TRIALS, "d": 2},
+{"id": 90, "q": "A post claims a treatment is effective because patients improved afterreceiving it, with no untreated comparison. What alternative explanation remains?", "o":["There can be no alternative explanation",
+"The treatment must have caused every improvement", "Patients might have improved for other reasons, including natural recovery or other care"], "a": 2, "e": "Without a comparison, improvement cannot automatically be attributed to the treatment.", "t": "Causality", "s": "NCCIH — Clinical Studies", "u":
+U_TRIALS, "d": 2},
+{"id": 91, "q": "An AI system is trained mostly on health content from one region. Whatrisk should its designers evaluate?", "o": ["It may miss local language, context, and health-system differences elsewhere",
+"It will always be more accurate globally", "Traininglocation never matters"], "a": 0, "e": "Training data can shape how a system performs across languages and contexts. Testing across groups is important.", "t": "AI bias", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 92, "q": "A user asks why a claim was rated misleading. Which response best supports learning?", "o": [
+"Because the AI said so", "Show which part lacks support, explainthe evidence, and link to sources", "Give only a red warning icon"], "a": 1, "e": "An explanation helps users understand the reasoning and independently verify the evidence.", "t": "Explainability", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 93, "q": "A platform flags a claim as potentially misleading before sharing. What should the warning avoid?", "o": ["Encouraging a pause", "Offering a link to evidence","Presenting an uncertain automated flag as a final medical verdict"], "a": 2, "e": "Warnings should communicate uncertainty and invite checking, not pretend an automated systemis infallible.", "t": "Warning design", "s": "WHO — Health literacy", "u": U_WHO,
+"d": 2},
+{"id": 94, "q": "A health intervention has benefits but also known risks. What is the fairest summary?", "o":
+["Describe both benefits and risks with context, rather than calling it completely safe or completely dangerous", "Mention only the benefits", "Mention only frightening risks"], "a": 0, "e": "Balanced risk communication gives readers relevant benefits, harms, and uncertainty in context.", "t": "Risk communication",
+"s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 95, "q": "A team wants to test whether its misinformation tool improves criticalthinking. Which evaluation is strongest?", "o": ["Ask users whether they liked the colors", "Compare performance on new, unseen claims before and after or against a comparison group", "Count how many times users opened the app"],
+"a": 1, "e": "Testing unseen claimscan show whether users learned transferable evaluation skills, not just memorized answers.", "t": "Evaluating interventions", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 96, "q": "After using a quiz, users score higher on the exact questions they practiced. What additional test would best show transfer?", "o": ["Repeat the same questions immediately", "Ask whether they enjoyed the quiz", "Give new claims they have not seenand assess their reasoning"], "a": 2, "e": "Unseen questions help test whether learning transfers beyond memorized answers.", "t": "Learning transfer", "s":
+"WHO — Health literacy", "u": U_WHO, "d": 2}
+];
+/* Custom Vector Medal Generator */
+const TIER_PALETTES = {
+beginner: { rim1:"#34d399", rim2:"#059669", core1:"#ecfdf5", core2:"#a7f3d0", rib1:"#10b981", rib2:"#047857",
+stroke:"#065f46" },
+finder:    { rim1:"#38bdf8", rim2:"#0284c7", core1:"#f0f9ff", core2:"#bae6fd", rib1:"#0ea5e9", rib2:"#0369a1",
+stroke:"#075985" },
+thinker:   { rim1:"#2dd4bf", rim2:"#0f766e", core1:"#f0fdfa", core2:"#99f6e4", rib1:"#14b8a6", rib2:"#115e59",
+stroke:"#134e4a" },
+defender: { rim1:"#818cf8", rim2:"#4338ca", core1:"#eef2ff", core2:"#c7d2fe", rib1:"#6366f1", rib2:"#3730a3",
+stroke:"#312e81" },
+guardian: { rim1:"#fbbf24", rim2:"#d97706", core1:"#fffbeb", core2:"#fde68a", rib1:"#f59e0b", rib2:"#b45309",
+stroke:"#78350f" },
+locked:   { rim1:"#cbd5e1", rim2:"#94a3b8", core1:"#f8fafc", core2:"#e2e8f0", rib1:"#cbd5e1", rib2:"#94a3b8",
+stroke:"#64748b" }
+};
+const EMBLEM_PATHS = {
+sprout:   '<path d="M12 19v-7m0 0c0-3.5 3-6 6-6 0 3.5-2.5 6-6 6zm0 0c0-2.8-2.4-5-5-5 02.8 2.2 5 5 5z"/>',
+magnify: '<circle cx="11" cy="11" r="4.5"/><path d="M14.5 14.5L18 18"/>',
+brain:    '<path d="M9.5 6.5a2.5 2.5 0 0 1 5 0 2.5 2.5 0 0 1 2 4 2.5 2.5 0 0 1-1 4.5H8.5a2.5 2.5 0 0 1-1-4.5 2.5 2.5 0 0 1 2-4z"/><path d="M12 6.5v8.5"/>',
+shield:   '<path d="M12 5.5l5.5 2.2v4.3c0 3.4-2.3 6.2-5.5 7-3.2-.8-5.5-3.6-5.5-7V7.7L125.5z"/><path d="M9.8 12.2l1.5 1.5 3-3.2"/>',
+crown:    '<path d="M6.5 16.5h11l1-7.5-3.8 2.8L12 7.5l-2.7 4.3L5.5 9l1 7.5z"/><line x1="6.5" y1="18.5" x2="17. 5" y2="18.5"/>',
+compass: '<circle cx="12" cy="12" r="6"/><polygon points="14.2 9.8 12.8 12.8 9.8 14.211.2 11.2 14.2 9.8"/>',
+
+bulb:     '<path d="M9.5 14.5h5M10 17h4M12 6a4 4 0 0 0-2.5 7.1c.4.3.5.8.5 1.4h4c0-.6.1-1.1.5-1.4A4 4 0 0 0 12 6z"/>',
+target:    '<circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2.5"/><line x1="12" y1="4.5" x2="12" y2="6.5"/><line x1="12" y1="17.5" x2="12" y2="19.5"/>',
+star:     '<polygon points="12 6 13.8 9.8 18 10.4 15 13.3 15.7 17.5 12 15.5 8.3 17.5 9 13.3 6 10.4 10.2 9.8 12 6"/>',
+book:     '<path d="M6.5 7.5h4.5a1.5 1.5 0 0 1 1 1.4v8.6a1.5 1.5 0 0 0-1.5-1.2H6.5V7.5zm11 0H13a1.5 1.5 0 0 0- 1 1.4v8.6a1.5 1.5 0 0 1 1.5-1.2h4V7.5z"/>',
+scale:    '<line x1="12" y1="6" x2="12" y2="18"/><line x1="7" y1="9" x2="17" y2="9"/><path d="M7 9l-2 4h4l-2- 4zm10 0l-2 4h4l-2-4z"/>',
+lock:     '<rect x="7.5" y="11" width="9" height="6.5" rx="1.5"/><path d="M9.5 11V8.5a2.5 2.5 0 0 1 5 0V11"/>'
+};
+QUESTIONS.push(
+{"id": 97, "q": "A platform flags a claim as potentially misleading before sharing. What should the warning avoid?", "o": ["Encouraging a pause", "Offering a link to evidence","Presenting an uncertain automated flag as a final medical verdict"], "a": 2, "e": "Warnings should communicate uncertainty and invite checking, not pretend an automated systemis infallible.", "t": "Warning design", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 98, "q": "A health intervention has benefits but also known risks. What is the fairest summary?", "o": ["Describe both benefits and risks with context, rather than calling it completely safe or completely dangerous", "Mention only the benefits", "Mention only frightening risks"], "a": 0, "e": "Balanced risk communication gives readers relevant benefits, harms, and uncertainty in context.", "t": "Risk communication", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 99, "q": "A team wants to test whether its misinformation tool improves criticalthinking. Which evaluation is strongest?", "o": ["Ask users whether they liked the colors", "Compare performance on new, unseen claims before and after or against a comparison group", "Count how many times users opened the app"], "a": 1, "e": "Testing unseen claimscan show whether users learned transferable evaluation skills, not just memorized answers.", "t": "Evaluating interventions", "s": "WHO — Health literacy", "u": U_WHO, "d": 2},
+{"id": 100, "q": "After using a quiz, users score higher on the exact questions they practiced. What additional test would best show transfer?", "o": ["Repeat the same questions immediately", "Ask whether they enjoyed the quiz", "Give new claims they have not seenand assess their reasoning"], "a": 2, "e": "Unseen questions help test whether learning transfers beyond memorized answers.", "t": "Learning transfer", "s": "WHO — Health literacy", "u": U_WHO, "d": 2}
+);
+let svgUid = 0;
+function buildMedalSVG(tierKey, emblemKey, sizeClass = "medal-md", locked = false, isMilestone = false) {
+const pal = locked ? TIER_PALETTES.locked : (TIER_PALETTES[tierKey] || TIER_PALETTES.beginner);
+const emblem = locked ? EMBLEM_PATHS.lock : (EMBLEM_PATHS[emblemKey] || EMBLEM_PATHS.star);
+const id = ++svgUid;
+const starRing = isMilestone && !locked
+? `<circle cx="32" cy="30" r="19" fill="none" stroke="${pal.rim1}" stroke-width="1.2" stroke-dasharray="2.5 3"/>`
+: "";
+return `<svg class="medal-svg ${sizeClass}" viewBox="0 0 64 64" aria-hidden="true">
+<defs>
+<linearGradient id="rim_${id}" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="${pal.rim1}"/>
+<stop offset="100%" stop-color="${pal.rim2}"/>
+</linearGradient>
+<linearGradient id="core_${id}" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="${pal.core1}"/>
+<stop offset="100%" stop-color="${pal.core2}"/>
+</linearGradient>
+</defs>
+<polygon points="21,42 15,61 24,56 29,61 31,44" fill="${pal.rib1}"/>
+<polygon points="43,42 49,61 40,56 35,61 33,44" fill="${pal.rib2}"/>
+<circle cx="32" cy="30" r="22" fill="url(#rim_${id})" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="32" cy="30" r="16.5" fill="url(#core_${id})" stroke="${pal.rim2}" stroke-width="1.2"/>
+${starRing}
+<g transform="translate(20, 18)" fill="none" stroke="${pal.stroke}" stroke-width="2.1" stroke-linecap="round"
+stroke-linejoin="round">
+${emblem}
+</g>
+</svg>`;
+}
+
+const MILESTONE_BADGES = [
+{ name: "Beginner", tier: "beginner", emblem: "sprout", range: "Rounds 1–5", at: 5, desc: "Every great health explorer starts with a single curious question—you just planted the roots of lifelong media literacy!" },
+{ name: "Fact Finder", tier: "finder", emblem: "magnify", range: "Rounds 6–10", at: 10,desc: "You no longer take viral claims at face value; your instinct to trace evidence isturning you into a true truth-seeker!" },
+{ name: "Critical Thinker", tier: "thinker", emblem: "brain", range: "Rounds 11–15", at: 15, desc: "Hype and emotional headlines cannot fool you now—your analytical mind weighsstudy quality with calm precision!" },
+{ name: "Misinformation Defender", tier: "defender", emblem: "shield", range: "Rounds 16–20", at: 20, desc:
+"By pausing before sharing and spotting hidden bias, you are actively protecting your friends, family, and community!" },
+{ name: "Health Guardian", tier: "guardian", emblem: "crown", range: "Rounds 21–25", at: 25, desc: "Champion of evidence! You have mastered all 25 rounds and stand as a trustedbeacon of clarity in a noisy digital world!" }
+];
+const ROUND_BADGES = [
+["beginner", "sprout", "Curious Sprout", "A bold first step! Asking 'Is this really true?' is where smart health decisions begin."],
+["beginner", "magnify", "Keen Observer", "Your eyes are sharp—you are learning to lookpast flashy headlines and spot what really matters."],
+["beginner", "compass", "Source Seeker", "Like a true navigator, you know that following a claim back to its origin leads to safer shores."],
+["beginner", "bulb", "Question Keeper", "Never stop wondering why! A thoughtful question is stronger than a thousand viral shares."],
+["beginner", "star", "Growing Mind", "Five rounds down! Your curiosity has blossomed into a strong foundation of healthy skepticism."],
+["finder", "magnify", "Evidence Explorer", "You are digging beneath the surface and discovering how real scientific proof separates fact from fiction."],
+["finder", "compass", "Clue Connector", "Brilliant work piecing together dates, authors, and context to uncover the full story behind health posts."],
+["finder", "book", "Knowledge Builder", "Brick by brick, you are constructing a solid shield of verified health knowledge that lasts a lifetime."],
+["finder", "target", "Claim Detective", "Nothing slips past your magnifying glass—you spotted the red flags of unsupported promises with ease!"],
+["finder", "star", "Fact Finder Elite", "Ten rounds conquered! You now hunt for peer-reviewed truth with confidence and clarity."],
+["thinker", "bulb", "Insight Seeker", "You see beyond surface numbers, understanding that percentages and charts always need real-world context."],
+["thinker", "scale", "Fair Evaluator", "Balanced and objective—you weigh both benefitsand limitations before trusting any health advice."],
+["thinker", "brain", "Critical Mind", "Complex research doesn't intimidate you; you break down claims logically like a seasoned scientist."],
+["thinker", "shield", "Careful Sharer", "Your patience to pause and verify stops falserumors in their tracks before they reach anyone else."],
+["thinker", "star", "Bright Thinker", "Fifteen rounds mastered! Your sharp reasoning illuminates truth even in the most confusing debates."],
+["defender", "magnify", "Evidence Tester", "You challenge bold claims with tough questions about sample size, control groups, and real proof."],
+["defender", "compass", "Science Navigator", "Through preprints, animal trials, and headlines, you steer steadily toward trustworthy medical guidance."],
+["defender", "brain", "Logic Leader", "Fallacies and fear tactics lose their power whenconfronted with your calm, step-by-step logic."],
+["defender", "target", "Risk Recognizer", "You spot hidden side effects and exaggeratedpromises that others miss—staying safe and well-informed."],
+["defender", "shield", "Defender Elite", "Twenty rounds victorious! Your commitment toaccuracy makes the digital health space safer for everyone."],
+["guardian", "compass", "Context Explorer", "You understand that local guidance, timing, and individual needs shape every sound health decision."],
+["guardian", "book", "Research Reader", "Reading between the lines of studies is now second nature to you—true mastery in action!"],
+["guardian", "target", "Precision Thinker", "Surgical accuracy! You separate nuanced facts from misleading spin with remarkable skill."],
+["guardian", "shield", "Health Advocate", "One step from the summit! Your voice and example empower others to choose evidence over hype."],
+["guardian", "crown", "Supreme Guardian", "Twenty-five rounds complete! You have reached the pinnacle of health literacy—keep shining your light!"]
+].map((b, i) => ({ round: i + 1, tier: b[0], emblem: b[1], name: b[2], desc: b[3] }));
+/* Web Audio API Victory Trumpet Fanfare */
+let soundEnabled = true;
+let audioCtx = null;
+function initAudio() {
+if (!audioCtx) {
+const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+if (AudioContextClass) audioCtx = new AudioContextClass();
+}
+if (audioCtx && audioCtx.state === "suspended") {
+audioCtx.resume();
+}
+}
+function playVictoryFanfare(isGrand = false) {
+if (!soundEnabled) return;
+try {
+initAudio();
+if (!audioCtx) return;
+const now = audioCtx.currentTime;
+const notes = isGrand
+? [
+{ freq: 523.25, start: 0.00, dur: 0.13, vol: 0.16 },
+{ freq: 659.25, start: 0.13, dur: 0.13, vol: 0.16 },
+{ freq: 783.99, start: 0.26, dur: 0.13, vol: 0.17 },
+{ freq: 1046.50, start: 0.40, dur: 0.55, vol: 0.22 },
+{ freq: 783.99, start: 0.40, dur: 0.55, vol: 0.12 },
+{ freq: 659.25, start: 0.40, dur: 0.55, vol: 0.10 }
+]
+: [
+{ freq: 523.25, start: 0.00, dur: 0.12, vol: 0.15 },
+{ freq: 523.25, start: 0.13, dur: 0.12, vol: 0.15 },
+{ freq: 523.25, start: 0.26, dur: 0.12, vol: 0.15 },
+{ freq: 659.25, start: 0.39, dur: 0.44, vol: 0.19 },
+{ freq: 783.99, start: 0.39, dur: 0.44, vol: 0.13 }
+];
+notes.forEach(n => {
+const osc = audioCtx.createOscillator();
+const subOsc = audioCtx.createOscillator();
+const filter = audioCtx.createBiquadFilter();
+const gain = audioCtx.createGain();
+osc.type = "sawtooth";
+subOsc.type = "triangle";
+osc.frequency.setValueAtTime(n.freq, now + n.start);
+subOsc.frequency.setValueAtTime(n.freq, now + n.start);
+filter.type = "lowpass";
+filter.frequency.setValueAtTime(900, now + n.start);
+filter.frequency.exponentialRampToValueAtTime(2800, now + n.start + 0.06);
+filter.frequency.exponentialRampToValueAtTime(1600, now + n.start + n.dur);
+gain.gain.setValueAtTime(0.001, now + n.start);
+gain.gain.linearRampToValueAtTime(n.vol, now + n.start + 0.03);
+gain.gain.setValueAtTime(n.vol * 0.88, now + n.start + n.dur - 0.06);
+gain.gain.exponentialRampToValueAtTime(0.001, now + n.start + n.dur);
+osc.connect(filter);
+subOsc.connect(filter);
+filter.connect(gain);
+gain.connect(audioCtx.destination);
+osc.start(now + n.start);
+subOsc.start(now + n.start);
+
+osc.stop(now + n.start + n.dur + 0.02);
+subOsc.stop(now + n.start + n.dur + 0.02);
+});
+} catch (e) {}
+}
+function triggerSpotlightGlow() {
+const overlay = $("spotlightOverlay");
+const halo = $("radiantHalo");
+const rays = $("sunburstRays");
+const wrap = $("resultMedalWrap");
+const pill = $("resultBadgePill");
+overlay.classList.remove("flash");
+halo.classList.remove("active");
+rays.classList.remove("active");
+wrap.classList.remove("pop");
+pill.classList.remove("pop");
+void overlay.offsetWidth;
+overlay.classList.add("flash");
+halo.classList.add("active");
+rays.classList.add("active");
+wrap.classList.add("pop");
+pill.classList.add("pop");
+}
+const KEY = "hm_100q_progress_v5";
+const LEGACY_KEY = "hm_100q_progress_v4";
+const $ = id => document.getElementById(id);
+function freshProgress() {
+return {
+round: 1,
+used: [],
+points: 0,
+correct: 0,
+roundPoints: 0,
+roundCorrect: 0,
+roundQuestions: [],
+roundAnswers: {},
+qIndex: 0
+};
+}
+let progress = freshProgress();
+function load() {
+try {
+const current = localStorage.getItem(KEY);
+const legacy = current ? null : localStorage.getItem(LEGACY_KEY);
+const saved = JSON.parse(current || legacy || "null");
+if (!saved || !Array.isArray(saved.used)) return;
+progress = { ...freshProgress(), ...saved };
+progress.round = Math.min(26, Math.max(1, Number(progress.round) || 1));
+progress.used = [...new Set(progress.used.filter(Number.isInteger))];
+progress.points = Math.max(0, Number(progress.points) || 0);
+progress.correct = Math.max(0, Number(progress.correct) || 0);
+progress.roundQuestions = Array.isArray(progress.roundQuestions)
+? progress.roundQuestions.filter(q => q && Number.isInteger(q.id) && QUESTIONS.some(item => item.id ===
+q.id))
+: [];
+progress.roundAnswers = progress.roundAnswers && typeof progress.roundAnswers === "object"
+? progress.roundAnswers
+: {};
+progress.qIndex = Math.max(0, Math.min(3, Number(progress.qIndex) || 0));
+// The old version did not save selected answers. Keep completed rounds,
+// but safely restart an unfinished round so answers cannot be scored twice.
+if (!current && progress.roundQuestions.length === 4) {
+const oldRoundIsComplete = progress.roundQuestions.every(q => progress.used.includes(q.id));
+if (!oldRoundIsComplete) {
+const activeIds = progress.roundQuestions.map(q => q.id);
+progress.used = progress.used.filter(id => !activeIds.includes(id));
+progress.points = Math.max(0, progress.points - (Number(progress.roundPoints) || 0));
+progress.correct = Math.max(0, progress.correct - (Number(progress.roundCorrect) || 0));
+}
+}
+if (!current) {
+// Migrate the older version: it had no saved answer selections.
+progress.roundQuestions = [];
+progress.roundAnswers = {};
+progress.qIndex = 0;
+progress.roundPoints = 0;
+progress.roundCorrect = 0;
+} else if (progress.roundQuestions.length !== 4) {
+// Discard an incomplete/corrupt saved round without affecting completed totals.
+progress.roundQuestions = [];
+progress.roundAnswers = {};
+progress.qIndex = 0;
+progress.roundPoints = 0;
+progress.roundCorrect = 0;
+}
+save();
+} catch (error) {
+console.warn("Could not load saved quiz progress:", error);
+progress = freshProgress();
+}
+}
+function save() {
+try {
+localStorage.setItem(KEY, JSON.stringify(progress));
+} catch (error) {
+console.warn("Could not save quiz progress:", error);
+}
+}
+function show(id) {
+document.querySelectorAll(".screen").forEach(x => x.classList.remove("active"));
+$(id).classList.add("active");
+}
+function shuffle(a) {
+a = [...a];
+for (let i = a.length - 1; i > 0; i--) {
+let j = Math.floor(Math.random() * (i + 1));
+[a[i], a[j]] = [a[j], a[i]];
+}
+return a;
+}
+
+function badgeForRound(n) {
+return MILESTONE_BADGES.find(b => n <= b.at) || MILESTONE_BADGES[4];
+}
+function renderHome() {
+const done = progress.round - 1;
+const currentRank = badgeForRound(Math.min(progress.round, 25));
+$("heroMedal").innerHTML = buildMedalSVG(currentRank.tier, currentRank.emblem, "medal-lg", false, true);
+$("journeySummary").textContent = `Completed ${done} of 25 rounds · Current Rank Track:${currentRank.name} (${
+currentRank.range})`;
+$("roundMap").innerHTML = Array.from({ length: 25 }, (_, i) => {
+let n = i + 1;
+let cls = n <= done ? "done" : n === progress.round ? "current" : "";
+let rb = ROUND_BADGES[i];
+let miniIcon = n <= done
+? buildMedalSVG(rb.tier, rb.emblem, "medal-sm", false, n % 5 === 0)
+: (n === progress.round
+? `<svg width="20" height="20" viewBox="0 0 24 24" fill="#166d9c"><polygon points="8 5 19 12 8 19 8 5"/></svg>`
+: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9fb3b9" stroke-width="2"><circle
+cx="12" cy="12" r="7"/></svg>`);
+return `<div class="rounddot ${cls}">${miniIcon}<div>R${n}</div></div>`;
+}).join("");
+$("milestoneCollection").innerHTML = MILESTONE_BADGES.map(b => {
+const unlocked = b.at <= done;
+return `<div class="badge-card milestone-card ${unlocked ? "unlocked" : ""}" style="opacity:${unlocked ? 1 : 0.55}" title="${b.desc}">
+${buildMedalSVG(b.tier, b.emblem, "medal-md", !unlocked, true)}
+<div class="b-info">
+<span class="b-tier">${b.range}</span>
+<span>${b.name}</span>
+</div>
+</div>`;
+}).join("");
+$("badgeCollection").innerHTML = ROUND_BADGES.map(b => {
+const unlocked = b.round <= done;
+return `<div class="badge-card ${unlocked ? "unlocked" : ""}" style="opacity:${unlocked ? 1 : 0.48}" title="${ unlocked ? b.desc : "Complete Round " + b.round + " to unlock"}">
+${buildMedalSVG(b.tier, b.emblem, "medal-md", !unlocked, b.round % 5 === 0)}
+<div class="b-info">
+<span class="b-tier">Round ${b.round}</span>
+<span>${unlocked ? b.name : "Locked Medal"}</span>
+</div>
+</div>`;
+}).join("");
+$("begin").textContent = progress.round > 25 ? "View completed journey" : (done === 0 ?"Start Round 1 →" :
+`Continue Round ${progress.round} →`);
+}
+function startRound() {
+initAudio();
+if (progress.round > 25) {
+showComplete();
+return;
+}
+const hasValidSavedRound = Array.isArray(progress.roundQuestions)
+&& progress.roundQuestions.length === 4
+&& progress.roundQuestions.every(q => q && QUESTIONS.some(item => item.id === q.id));
+if (!hasValidSavedRound) {
+const unused = shuffle(QUESTIONS.filter(q => !progress.used.includes(q.id)));
+if (unused.length < 4) {
+showComplete();
+return;
+}
+progress.roundQuestions = unused.slice(0, 4);
+progress.roundAnswers = {};
+progress.qIndex = 0;
+progress.roundCorrect = 0;
+progress.roundPoints = 0;
+save();
+}
+show("quiz");
+renderQuestion();
+}
+function renderQuestion() {
+const q = progress.roundQuestions[progress.qIndex];
+if (!q) {
+startRound();
+return;
+}
+const b = badgeForRound(progress.round);
+$("roundLabel").textContent = `ROUND ${progress.round} / 25`;
+$("qCount").textContent = `Question ${progress.qIndex + 1} of 4`;
+$("badgeLabel").innerHTML = `${buildMedalSVG(b.tier, b.emblem, "medal-sm", false, true)} <span>${b.name} (${
+b.range})</span>`;
+$("scoreLabel").textContent = `${progress.points} pts`;
+$("bar").style.width = `${(progress.qIndex / 4) * 100}%`;
+$("topic").textContent = q.t;
+$("difficulty").textContent = ["Easy", "Medium", "Advanced"][q.d] || "General";
+$("question").textContent = q.q;
+$("feedback").className = "feedback";
+$("feedback").replaceChildren();
+$("mascotReaction").className = "mascot-reaction";
+$("next").style.display = "none";
+$("options").replaceChildren();
+q.o.forEach((value, index) => {
+const button = document.createElement("button");
+button.className = "option";
+const letter = document.createElement("span");
+letter.className = "letter";
+letter.textContent = String.fromCharCode(65 + index);
+const label = document.createElement("span");
+label.textContent = value;
+button.append(letter, label);
+button.addEventListener("click", () => answer(index));
+$("options").append(button);
+});
+const savedChoice = progress.roundAnswers[String(q.id)];
+if (Number.isInteger(savedChoice)) {
+showAnswerState(q, savedChoice);
+}
+}
+function showAnswerState(q, choice) {
+const isCorrect = choice === q.a;
+const mascot = $("mascotReaction");
+
+mascot.className = `mascot-reaction show ${isCorrect ? "happy" : "encourage"}`;
+$("mascotTitle").textContent = isCorrect ? "EXCELLENT!" : "KEEP LEARNING!";
+$("mascotSubtitle").textContent = isCorrect
+? "Great thinking! You checked the claim carefully."
+: "Every question is a chance to learn. Review the evidence and keep going!";
+const eyes = $("mascotEyes");
+const mouth = $("mascotMouth");
+if (eyes) eyes.setAttribute("fill", isCorrect ? "#7ff4dc" : "#b9c3ff");
+if (mouth) mouth.setAttribute("d", isCorrect ? "M42 51q8 11 16 0" : "M42 57q8 -7 16 0");
+document.querySelectorAll(".option").forEach((button, index) => {
+button.disabled = true;
+if (index === q.a) button.classList.add("correct");
+if (index === choice && !isCorrect) button.classList.add("wrong");
+});
+const feedback = $("feedback");
+feedback.className = `feedback show ${isCorrect ? "good" : "bad"}`;
+const heading = document.createElement("h3");
+heading.textContent = isCorrect ? "✓ Correct!" : "Not quite — here's what matters.";
+const explanation = document.createElement("p");
+explanation.textContent = q.e;
+const source = document.createElement("a");
+source.className = "source";
+source.href = q.u;
+source.target = "_blank";
+source.rel = "noopener noreferrer";
+source.textContent = `↗ ${q.s}`;
+feedback.replaceChildren(heading, explanation, source);
+$("scoreLabel").textContent = `${progress.points} pts`;
+$("bar").style.width = `${((progress.qIndex + 1) / 4) * 100}%`;
+$("next").textContent = progress.qIndex === 3 ? "Finish round & claim medal →" : "Next question →";
+$("next").style.display = "inline-block";
+}
+function answer(choice) {
+const q = progress.roundQuestions[progress.qIndex];
+if (!q || Number.isInteger(progress.roundAnswers[String(q.id)])) return;
+if (!Number.isInteger(choice) || choice < 0 || choice >= q.o.length) return;
+const isCorrect = choice === q.a;
+progress.roundAnswers[String(q.id)] = choice;
+progress.used = [...new Set([...progress.used, q.id])];
+if (isCorrect) {
+progress.roundCorrect++;
+progress.correct++;
+progress.roundPoints += 10;
+progress.points += 10;
+}
+save();
+showAnswerState(q, choice);
+}
+function nextQuestion() {
+if (progress.qIndex < 3) {
+progress.qIndex++;
+save();
+renderQuestion();
+} else {
+finishRound();
+}
+}
+function finishRound() {
+const n = progress.round;
+const roundCorrect = progress.roundCorrect;
+const roundPoints = progress.roundPoints;
+const pct = Math.round((roundCorrect / 4) * 100);
+const roundBadge = ROUND_BADGES[n - 1];
+const milestone = MILESTONE_BADGES.find(b => b.at === n);
+$("resultMedalWrap").innerHTML = buildMedalSVG(roundBadge.tier, roundBadge.emblem, "medal-lg", false,
+Boolean(milestone));
+$("resultBadgePill").textContent = `Round ${n} Medal: ${roundBadge.name}`;
+$("badgeMotivationText").textContent = `"${roundBadge.desc}"`;
+$("resultTitle").textContent = pct >= 75 ? "Excellent progress!" : pct >= 50 ? "You're learning with every round!" : "Round complete — keep building skill!";
+$("resultText").textContent = `You completed Round ${n} and earned ${roundPoints} points.`;
+$("correctStat").textContent = `${roundCorrect}/4`;
+$("pointsStat").textContent = roundPoints;
+$("accuracyStat").textContent = pct + "%";
+$("newBadgeArea").innerHTML = milestone
+? `<div class="milestone-banner">
+${buildMedalSVG(milestone.tier, milestone.emblem, "medal-md", false, true)}
+<div>
+<h3>Rank Tier Unlocked: ${milestone.name} (${milestone.range})</h3>
+<p>${milestone.desc}</p>
+</div>
+</div>`
+: "";
+progress.round++;
+progress.roundQuestions = [];
+progress.roundAnswers = {};
+progress.qIndex = 0;
+progress.roundCorrect = 0;
+progress.roundPoints = 0;
+save();
+$("continue").textContent = progress.round > 25 ? "See Final Health Guardian Achievement →" : `Start Round
+${progress.round} →`;
+show("roundResult");
+triggerSpotlightGlow();
+playVictoryFanfare(Boolean(milestone));
+}
+function showComplete() {
+$("totalPoints").textContent = progress.points;
+$("finalMedalWrap").innerHTML = buildMedalSVG("guardian", "crown", "medal-lg", false, true);
+show("journeyDone");
+playVictoryFanfare(true);
+}
+function resetJourney() {
+if (!window.confirm("Start a new journey? Your current quiz progress will be reset.")) return;
+progress = freshProgress();
+save();
+renderHome();
+startRound();
+}
+$("soundToggle").onclick = () => {
+soundEnabled = !soundEnabled;
+$("soundToggle").classList.toggle("muted", !soundEnabled);
+$("soundIconOn").style.display = soundEnabled ? "inline" : "none";
+$("soundIconOff").style.display = soundEnabled ? "none" : "inline";
+$("soundText").textContent = soundEnabled ? "Sound ON" : "Muted";
+if (soundEnabled) playVictoryFanfare(false);
+};
+$("begin").onclick = () => { if (progress.round > 25) showComplete(); else startRound();};
+$("next").onclick = nextQuestion;
+$("continue").onclick = () => { if (progress.round > 25) showComplete(); else startRound(); };
+$("restart").onclick = resetJourney;
+load();
+renderHome();
+</script>
+</body>
