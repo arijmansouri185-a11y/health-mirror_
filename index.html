@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,6 @@
 <meta name="theme-color" content="#effaf7">
 <meta name="description" content="Health Mirror — AI-powered health information awareness and misinformation education.">
 <title>Health Mirror | Think Before You Trust</title>
-
 <style>
 :root {
   --mint: #eaf8f3;
@@ -79,6 +79,7 @@ h1 { font-size: clamp(38px, 6vw, 65px); line-height: 1.08; margin: 15px 0; }
   transition: .2s;
 }
 .btn:hover { transform: translateY(-2px); }
+.btn:disabled { opacity: .65; cursor: wait; transform: none; }
 .primary { background: linear-gradient(100deg, var(--teal), var(--purple)); color: white; }
 .secondary { background: white; border: 1px solid var(--border); color: var(--dark); }
 .mirror-art {
@@ -156,7 +157,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
 }
 </style>
 </head>
-
 <body>
 <header>
   <div class="nav">
@@ -178,7 +178,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
     </nav>
   </div>
 </header>
-
 <main>
 <section class="hero" id="home">
   <div class="container hero-grid">
@@ -198,7 +197,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
     <div class="mirror-art" aria-label="Health Mirror illustration">🪞🛡️</div>
   </div>
 </section>
-
 <section>
   <div class="container">
     <div class="section-head">
@@ -212,7 +210,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
     </div>
   </div>
 </section>
-
 <section class="soft" id="analyzer">
   <div class="container">
     <div class="section-head">
@@ -231,7 +228,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
     </div>
   </div>
 </section>
-
 <section id="evidence">
   <div class="container">
     <div class="section-head">
@@ -245,7 +241,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
     </div>
   </div>
 </section>
-
 <section class="soft" id="community">
   <div class="container">
     <div class="section-head">
@@ -261,7 +256,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
     </div>
   </div>
 </section>
-
 <section id="shield">
   <div class="container">
     <div class="section-head">
@@ -277,7 +271,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
     </div>
   </div>
 </section>
-
 <section class="soft" id="guide">
   <div class="container">
     <div class="section-head">
@@ -293,7 +286,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
     </div>
   </div>
 </section>
-
 <section id="quiz">
   <div class="container">
     <div class="section-head">
@@ -310,7 +302,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
     </div>
   </div>
 </section>
-
 <section class="soft" id="history">
   <div class="container">
     <div class="section-head">
@@ -323,7 +314,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
     </div>
   </div>
 </section>
-
 <section id="alerts">
   <div class="container">
     <div class="section-head">
@@ -337,7 +327,6 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
     </div>
   </div>
 </section>
-
 <section class="soft" id="profile">
   <div class="container">
     <div class="section-head">
@@ -353,13 +342,13 @@ footer { padding: 30px 5%; text-align: center; background: #eaf7f3; color: #607a
   </div>
 </section>
 </main>
-
 <footer>
   <p><strong>Health Mirror</strong> — Think Before You Trust.</p>
   <p>Educational project about AI, health information, and misinformation.</p>
   <p>AI results may be inaccurate. Always verify important health information with trusted sources.</p>
 </footer>
-  <script>
+
+<script>
 const API_BASE = "https://health-mirror-ai-pzw0.onrender.com";
 
 function toggleMenu() {
@@ -437,7 +426,6 @@ async function runAI(type) {
   };
 
   const config = settings[type];
-
   if (!config) return;
 
   const text = document.getElementById(config.input).value;
@@ -462,7 +450,6 @@ async function runAI(type) {
     const result = await callHealthMirrorAI(config.endpoint, text);
 
     showResult(config.result, result);
-
     saveToHistory(type, text, result);
 
   } catch (error) {
@@ -488,7 +475,7 @@ async function runAI(type) {
   }
 }
 
-// AI HEALTH GUIDE
+// AI HEALTH GUIDE — CORRECTED ENDPOINT
 async function runGuide() {
   const input = document.getElementById("guideInput");
   const button = document.querySelector(
@@ -505,10 +492,13 @@ async function runGuide() {
   button.disabled = true;
   button.textContent = "Thinking...";
 
-  showResult("guideResult", "Health Mirror AI is preparing an educational response...");
+  showResult(
+    "guideResult",
+    "Health Mirror AI is preparing an educational response..."
+  );
 
   try {
-    const result = await callHealthMirrorAI("/analyze", question);
+    const result = await callHealthMirrorAI("/guide", question);
 
     showResult(
       "guideResult",
